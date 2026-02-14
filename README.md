@@ -47,34 +47,149 @@ This Angular 19 application provides an intuitive interface for manufacturing pl
 ## Project Structure
 
 ```
-src/
-├── app/
-│   ├── components/
-│   │   ├── timeline/
-│   │   │   ├── timeline.component.ts
-│   │   │   ├── timeline.component.html
-│   │   │   └── timeline.component.scss
-│   │   ├── work-order-panel/
-│   │   │   ├── work-order-panel.component.ts
-│   │   │   ├── work-order-panel.component.html
-│   │   │   └── work-order-panel.component.scss
-│   │   └── action-menu/
-│   │       ├── action-menu.component.ts
-│   │       ├── action-menu.component.html
-│   │       └── action-menu.component.scss
-│   ├── services/
-│   │   ├── work-order.service.ts
-│   │   └── work-center.service.ts
-│   ├── models/
-│   │   ├── work-order.model.ts
-│   │   └── work-center.model.ts
-│   ├── data/
-│   │   └── sample-data.ts
-│   ├── app.component.ts
-│   └── app.config.ts
-├── assets/
-└── styles/
-    └── globals.scss
+work-order-timeline/
+├── src/
+│   ├── app/
+│   │   ├── core/
+│   │   │   ├── models/
+│   │   │   │   ├── work-center.model.ts
+│   │   │   │   ├── work-order.model.ts
+│   │   │   │   ├── timeline-config.model.ts
+│   │   │   │   ├── zoom-level.type.ts
+│   │   │   │   └── index.ts
+│   │   │   │
+│   │   │   ├── services/
+│   │   │   │   ├── work-order.service.ts
+│   │   │   │   ├── date-calculation.service.ts
+│   │   │   │   ├── overlap-detection.service.ts
+│   │   │   │   ├── timeline-state.service.ts
+│   │   │   │   └── index.ts
+│   │   │   │
+│   │   │   ├── data/
+│   │   │   │   └── sample-data.ts
+│   │   │   │
+│   │   │   └── constants/
+│   │   │       ├── timeline.constants.ts
+│   │   │       └── colors.constants.ts
+│   │   │
+│   │   ├── features/
+│   │   │   └── timeline/
+│   │   │       ├── components/
+│   │   │       │   ├── timeline-container/
+│   │   │       │   │   ├── timeline-container.component.ts
+│   │   │       │   │   ├── timeline-container.component.html
+│   │   │       │   │   ├── timeline-container.component.scss
+│   │   │       │   │   └── timeline-container.component.spec.ts
+│   │   │       │   │
+│   │   │       │   ├── timeline-header/
+│   │   │       │   │   ├── timeline-header.component.ts
+│   │   │       │   │   ├── timeline-header.component.html
+│   │   │       │   │   ├── timeline-header.component.scss
+│   │   │       │   │   └── timeline-header.component.spec.ts
+│   │   │       │   │
+│   │   │       │   ├── timeline-grid/
+│   │   │       │   │   ├── timeline-grid.component.ts
+│   │   │       │   │   ├── timeline-grid.component.html
+│   │   │       │   │   ├── timeline-grid.component.scss
+│   │   │       │   │   └── timeline-grid.component.spec.ts
+│   │   │       │   │
+│   │   │       │   ├── work-center-row/
+│   │   │       │   │   ├── work-center-row.component.ts
+│   │   │       │   │   ├── work-center-row.component.html
+│   │   │       │   │   ├── work-center-row.component.scss
+│   │   │       │   │   └── work-center-row.component.spec.ts
+│   │   │       │   │
+│   │   │       │   ├── work-order-bar/
+│   │   │       │   │   ├── work-order-bar.component.ts
+│   │   │       │   │   ├── work-order-bar.component.html
+│   │   │       │   │   ├── work-order-bar.component.scss
+│   │   │       │   │   └── work-order-bar.component.spec.ts
+│   │   │       │   │
+│   │   │       │   ├── work-order-panel/
+│   │   │       │   │   ├── work-order-panel.component.ts
+│   │   │       │   │   ├── work-order-panel.component.html
+│   │   │       │   │   ├── work-order-panel.component.scss
+│   │   │       │   │   └── work-order-panel.component.spec.ts
+│   │   │       │   │
+│   │   │       │   ├── date-column-header/
+│   │   │       │   │   ├── date-column-header.component.ts
+│   │   │       │   │   ├── date-column-header.component.html
+│   │   │       │   │   ├── date-column-header.component.scss
+│   │   │       │   │   └── date-column-header.component.spec.ts
+│   │   │       │   │
+│   │   │       │   ├── current-day-indicator/
+│   │   │       │   │   ├── current-day-indicator.component.ts
+│   │   │       │   │   ├── current-day-indicator.component.html
+│   │   │       │   │   ├── current-day-indicator.component.scss
+│   │   │       │   │   └── current-day-indicator.component.spec.ts
+│   │   │       │   │
+│   │   │       │   └── three-dot-menu/
+│   │   │       │       ├── three-dot-menu.component.ts
+│   │   │       │       ├── three-dot-menu.component.html
+│   │   │       │       ├── three-dot-menu.component.scss
+│   │   │       │       └── three-dot-menu.component.spec.ts
+│   │   │       │
+│   │   │       └── utils/
+│   │   │           ├── date.utils.ts
+│   │   │           └── position.utils.ts
+│   │   │
+│   │   ├── shared/
+│   │   │   ├── components/
+│   │   │   │   ├── status-badge/
+│   │   │   │   │   ├── status-badge.component.ts
+│   │   │   │   │   ├── status-badge.component.html
+│   │   │   │   │   ├── status-badge.component.scss
+│   │   │   │   │   └── status-badge.component.spec.ts
+│   │   │   │   │
+│   │   │   │   ├── custom-button/
+│   │   │   │   │   ├── custom-button.component.ts
+│   │   │   │   │   ├── custom-button.component.html
+│   │   │   │   │   ├── custom-button.component.scss
+│   │   │   │   │   └── custom-button.component.spec.ts
+│   │   │   │   │
+│   │   │   │   └── form-field/
+│   │   │   │       ├── form-field.component.ts
+│   │   │   │       ├── form-field.component.html
+│   │   │   │       ├── form-field.component.scss
+│   │   │   │       └── form-field.component.spec.ts
+│   │   │   │
+│   │   │   ├── directives/
+│   │   │   │   ├── click-outside.directive.ts
+│   │   │   │   ├── horizontal-scroll.directive.ts
+│   │   │   │   └── row-hover.directive.ts
+│   │   │   │
+│   │   │   └── pipes/
+│   │   │       ├── date-format.pipe.ts
+│   │   │       └── safe-html.pipe.ts
+│   │   │
+│   │   ├── app.component.ts
+│   │   ├── app.component.html
+│   │   ├── app.component.scss
+│   │   └── app.config.ts
+│   │
+│   ├── assets/
+│   │   ├── fonts/
+│   │   └── images/
+│   │
+│   ├── styles/
+│   │   ├── _variables.scss
+│   │   ├── _mixins.scss
+│   │   ├── _typography.scss
+│   │   ├── _colors.scss
+│   │   ├── _grid.scss
+│   │   ├── _forms.scss
+│   │   └── styles.scss
+│   │
+│   ├── index.html
+│   └── main.ts
+│
+├── .gitignore
+├── angular.json
+├── package.json
+├── tsconfig.json
+├── tsconfig.app.json
+├── tsconfig.spec.json
+└── README.md
 ```
 
 ## Getting Started
@@ -308,17 +423,29 @@ NG_CLI_ANALYTICS=false
 ### Build Modes
 
 ```bash
-# Development (with HMR)
+# Development server on port 4150 (auto-open browser)
 npm start
+
+# Development with HMR (Hot Module Replacement) for faster reload
+npm run start:hmr
 
 # Production build
 npm run build
 
-# Development with watch mode
+# Production build with stats
+npm run build:prod
+
+# Production build with stats JSON for bundle analysis
+npm run build:stats
+
+# Development with watch mode (rebuild on file changes)
 npm run watch
 
 # Testing
 npm test
+
+# Angular utilities
+npm run ng -- <command>
 ```
 
 ## Troubleshooting
