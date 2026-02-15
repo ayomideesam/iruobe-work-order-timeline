@@ -1,0 +1,84 @@
+<section class="timeline-grid" tabindex="0" (focus)="onGridFocus()" (click)="onGridClick($event)">
+  <div class="grid-wrapper">
+    <!-- Left fixed column -->
+    <div class="left-panel" [class.first-column-selected]="selectedColumnIndex === 0">
+      <div class="work-center-label-header">
+        <span class="work-center-label-text">Work Center</span>
+      </div>
+      <div class="left-panel-body">
+        <div class="work-center-label" *ngFor="let center of getWorkCenters(); trackBy: trackByCenter"
+          [class.active]="activeWorkCenterId === center.id"
+          [class.hover]="hoveredCenterId() === center.id"
+          (mouseenter)="hoveredCenterId.set(center.id)"
+          (mouseleave)="hoveredCenterId.set(null)">{{ center.name }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Right scrollable area (single scroll for header + all rows) -->
+    <div class="right-panel" #rightPanel (scroll)="onHeaderScroll($event)">
+      <!-- Date columns header -->
+      <div class="date-columns-header" [style.width.px]="totalGridWidth">
+        <div class="date-column-header" *ngFor="let col of dateColumns; trackBy: trackByColumn"
+          [style.width.px]="col.width" (click)="onDateColumnClick(col)" [ngClass]="{'selected': isColumnSelected(col)}">
+          <span class="column-label">{{ col.label }}</span>
+        </div>
+
+        <!-- Current badge overlay (absolute, inside header so it doesn't affect row heights) -->
+        <div *ngIf="selectedDateColumn()" class="current-badge-overlay" [style.left.px]="getSelectedColumnPosition()">
+          <div class="current-badge">
+            <span class="current-text">{{ getCurrentLabel() }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grid body rows -->
+      <div class="grid-body" [style.width.px]="totalGridWidth">
+        <!-- Full-height column dividers (extends to bottom of grid) -->
+        <div class="column-dividers">
+          <div class="column-divider" *ngFor="let col of dateColumns; let i = index; trackBy: trackByColumn"
+            [style.width.px]="col.width" [class.selected-column]="isColumnSelected(col)"
+            [class.before-selected-column]="i === selectedColumnIndex - 1"></div>
+        </div>
+
+        <!-- Current day indicator - full height, behind work-order-bars -->
+        <app-current-day-indicator [gridStartDate]="gridStartDate"></app-current-day-indicator>
+
+        <div class="work-center-row" *ngFor="let center of getWorkCenters(); let first = first; trackBy: trackByCenter"
+          [class.active]="activeWorkCenterId === center.id"
+          [class.hover]="hoveredCenterId() === center.id"
+          (mouseenter)="hoveredCenterId.set(center.id)"
+          (mouseleave)="hoveredCenterId.set(null)">
+          <div class="timeline-cells-container" (mousemove)="onCellMouseMove($event, center.id, first)"
+            (mouseleave)="onCellMouseLeave()" (click)="onTimelineClick($event, center.id)">
+            <!-- Date column borders -->
+            <div class="timeline-cell" *ngFor="let col of dateColumns; let i = index; trackBy: trackByColumn"
+              [style.width.px]="col.width" [class.selected-column]="isColumnSelected(col)"
+              [class.before-selected-column]="i === selectedColumnIndex - 1"></div>
+          </div>
+
+          <!-- Ghost hover tooltip and placeholder -->
+          <div class="ghost-hover" *ngIf="hoverRowId() === center.id" [class.tooltip-below]="hoverIsFirstRow()"
+            [style.left.px]="hoverX()">
+            <div class="ghost-tooltip">Click to add dates</div>
+            <div class="ghost-rect"></div>
+          </div>
+
+          <!-- Work orders as absolutely positioned bars -->
+          <div class="orders-overlay">
+            <app-work-order-bar *ngFor="let order of getOrdersForCenter(center.id); trackBy: trackByOrder"
+              [order]="order" [style.left.px]="getOrderLeftPosition(order)" [style.width.px]="getOrderWidthPx(order)"
+              class="work-order-item" [class.focused]="isOrderFocused(order)" (mouseenter)="onCellMouseLeave()" (edit)="onEditOrder($event)"
+              (delete)="onDeleteOrder($event)">
+            </app-work-order-bar>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty state -->
+  <div *ngIf="orders().length === 0" class="empty-state">
+    <p>No work orders to display</p>
+  </div>
+</section>
