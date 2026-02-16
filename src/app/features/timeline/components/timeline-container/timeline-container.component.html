@@ -1,0 +1,19 @@
+<div class="timeline-container">
+  <div class="panel">
+    <app-timeline-header (scrollToToday)="onScrollToToday()"></app-timeline-header>
+  </div>
+
+  <div class="content-area">
+    <app-timeline-grid #timelineGrid [activeWorkCenterId]="activeWorkCenterId()" (openPanel)="onOpenPanel($event)"></app-timeline-grid>
+  </div>
+</div>
+
+<!-- Work Order Panel (slide-out) -->
+<app-work-order-panel
+  [isOpen]="isPanelOpen()"
+  [mode]="panelMode()"
+  [order]="selectedOrder()"
+  [workCenterId]="createWorkCenterId()"
+  [startDate]="createStartDate()"
+  (close)="onClosePanel()">
+</app-work-order-panel>

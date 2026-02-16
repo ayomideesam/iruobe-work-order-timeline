@@ -1,0 +1,24 @@
+.timeline-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0;
+  background: rgba(255, 255, 255, 1);
+  width: 1440px;
+  height: 1024px;
+}
+
+.panel {
+  background: var(--surface);
+  border-radius: 0;
+  padding: 0;
+  display: block;
+  align-items: stretch;
+  justify-content: flex-start;
+  box-shadow: none;
+}
+
+.content-area {
+  flex: 1;
+  overflow: hidden;
+}.content-area { min-height: 820px; display:block }
