@@ -1,0 +1,23 @@
+<div class="work-order-bar" [ngClass]="'status-' + order.data.status" 
+     [ngbTooltip]="getTooltipText()" 
+     [placement]="['top', 'bottom', 'start', 'end']"
+     container="body"
+     tooltipClass="wo-tooltip">
+  <span class="work-order-name">{{ order.data.name }}</span>
+  <div class="work-order-badge">
+    <span class="status-text">{{ getStatusLabel(order.data.status) }}</span>
+  </div>
+  <button class="three-dot-menu" [class.menu-active]="isMenuOpen" (click)="toggleMenu($event)" aria-label="Work order actions">
+    <span class="dot"></span>
+    <span class="dot"></span>
+    <span class="dot"></span>
+  </button>
+  <div class="dropdown-menu" 
+       *ngIf="isMenuOpen" 
+       [style.top.px]="dropdownTop"
+       [style.left.px]="dropdownLeft"
+       (click)="$event.stopPropagation()">
+    <button class="menu-item edit-item" (click)="onEdit()">Edit</button>
+    <button class="menu-item delete-item" (click)="onDelete()">Delete</button>
+  </div>
+</div>
