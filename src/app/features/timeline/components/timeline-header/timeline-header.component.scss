@@ -1,0 +1,289 @@
+:host {
+    display: block;
+    padding: 0;
+    position: relative;
+    z-index: 100;
+}
+
+.timeline-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+    z-index: 100;
+}
+
+.header-top {
+    height: 50px;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 1);
+}
+
+.logo {
+    width: 80px;
+    height: 10px;
+    object-fit: contain;
+}
+
+.header-content {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 24px 24px 16px 24px;
+    position: relative;
+    overflow: visible;
+    gap: 24px;
+}
+
+.left {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+h2 {
+    margin: 0;
+    font-family: var(--type-heading);
+    font-size: 32px;
+    font-weight: 600;
+    color: #0b1330;
+    line-height: 1.2;
+}
+
+.controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.controls label {
+    font-size: 12px;
+    color: var(--muted);
+    display: block;
+    margin-bottom: 6px;
+}
+
+.timescale-pill {
+    width: 146px;
+    height: 25px;
+    display: grid;
+    grid-template-columns: 0.5fr 0.5fr;
+    align-items: center;
+    background: rgba(255, 255, 255, 1);
+    border-radius: 5px;
+    box-shadow: 1px 2.5px 3px -1.5px rgba(200, 207, 233, 1);
+    position: relative;
+    overflow: visible;
+    flex-shrink: 0;
+
+    &::after {
+        content: '';
+        width: 10px;
+        height: 6px;
+        position: absolute;
+        top: 57%;
+        right: 8px;
+        transform: translateY(-50%);
+        background-image: url('/assets/images/arrow-down.svg');
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        pointer-events: none;
+        transition: transform 0.2s ease;
+        z-index: 10000000000000000000;
+    }
+
+    // ✅ Rotate arrow when dropdown is open
+    &.dropdown-open::after {
+        transform: translateY(-50%) rotate(180deg);
+    }
+}
+
+.timescale-label {
+    height: 25px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    letter-spacing: auto;
+    line-height: 16px;
+    font-family: CircularStd-Book;
+    font-size: 13px;
+    font-weight: 400;
+    color: rgba(104, 113, 150, 1);
+    background: rgba(241, 243, 248, 0.75);
+    border-radius: 5px 0 0 5px;
+}
+
+.timescale-select {
+    height: 25px;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: CircularStd-Medium;
+    color: rgba(62, 64, 219, 1);
+    cursor: pointer;
+}
+
+// ✅ Remove all focus outlines
+.timescale-select ::ng-deep .ng-select-container {
+    min-height: 25px;
+    height: 25px;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    padding: 0 4px 0 10px;
+    cursor: pointer;
+}
+
+.timescale-select ::ng-deep .ng-select-container:focus,
+.timescale-select.ng-select-focused ::ng-deep .ng-select-container {
+    outline: none !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+
+.timescale-select ::ng-deep .ng-value-container {
+    padding: 0;
+    cursor: pointer;
+}
+
+.timescale-select ::ng-deep .ng-placeholder,
+.timescale-select ::ng-deep .ng-value-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(62, 64, 219, 1);
+}
+
+.timescale-select ::ng-deep .ng-arrow-wrapper {
+    display: none;
+}
+
+.timescale-select ::ng-deep .ng-clear-wrapper {
+    display: none !important;
+}
+
+.timescale-select ::ng-deep .ng-dropdown-panel {
+    width: 200px !important;
+    height: 136px !important;
+    min-height: 136px !important;
+    max-height: 136px !important;
+    border-radius: 5px !important;
+    box-shadow: 0 0 0 1px rgba(104, 113, 150, 0.1),
+        0 2.5px 3px -1.5px rgba(200, 207, 233, 1),
+        0 4.5px 5px -1px rgba(216, 220, 235, 1) !important;
+    border: none !important;
+    background-color: rgb(255, 255, 255) !important;
+    top: 32px !important;
+    left: -72.5px !important;
+    z-index: 1000 !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+}
+
+.timescale-select ::ng-deep .ng-dropdown-panel .ng-dropdown-panel-items {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.timescale-select ::ng-deep .ng-dropdown-panel .ng-option {
+    width: 200px !important;
+    height: 28px !important;
+    min-height: 28px !important;
+    max-height: 28px !important;
+    padding: 5px 38px 5px 12px !important;
+    line-height: 28px !important;
+    display: flex !important;
+    align-items: center !important;
+    background-color: rgb(255, 255, 255) !important;
+    font-size: 14px !important;
+    font-family: 'Circular-Std', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+    font-weight: 400 !important;
+    color: rgba(47, 48, 89, 1) !important;
+    cursor: pointer !important;
+    transition: none !important;
+}
+
+.timescale-select ::ng-deep .ng-dropdown-panel .ng-option.ng-option-selected {
+    background-color: rgb(255, 255, 255) !important;
+    color: rgba(62, 64, 219, 1) !important;
+    font-weight: 500 !important;
+}
+
+.timescale-select ::ng-deep .ng-dropdown-panel .ng-option.ng-option-marked {
+    background-color: rgb(255, 255, 255) !important;
+    color: rgba(62, 64, 219, 1) !important;
+    font-weight: 400 !important;
+}
+
+.timescale-select ::ng-deep .ng-dropdown-panel .ng-option.ng-option-selected.ng-option-marked {
+    background-color: rgb(255, 255, 255) !important;
+    color: rgba(62, 64, 219, 1) !important;
+    font-weight: 500 !important;
+}
+
+.right {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.badge {
+    background: var(--primary);
+    color: #fff;
+    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+/* Today Button */
+.today-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 25px;
+    padding: 0 12px;
+    background: linear-gradient(180deg, #237FFC 0%, #1a6ed8 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    font-family: CircularStd-Medium;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: transform 0.14s ease, box-shadow 0.14s ease;
+    box-shadow: 1px 2px 4px rgba(35, 127, 252, 0.25);
+
+    svg {
+        flex-shrink: 0;
+    }
+
+    &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(35, 127, 252, 0.3);
+    }
+
+    &:active {
+        transform: translateY(0);
+        box-shadow: 1px 2px 4px rgba(35, 127, 252, 0.2);
+    }
+
+    &:focus-visible {
+        outline: 3px solid rgba(35, 127, 252, 0.3);
+        outline-offset: 2px;
+    }
+}
+
+@media (max-width: 880px) {
+    .header-content {
+        padding: 12px 16px;
+    }
+
+    .controls {
+        gap: 12px;
+    }
+}
