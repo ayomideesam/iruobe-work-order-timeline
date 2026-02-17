@@ -1,0 +1,433 @@
+/* ── Backdrop ── */
+.panel-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 999;
+}
+
+/* ── Panel container ── */
+.work-order-panel {
+  width: 591px;
+  height: 100vh;
+  box-shadow: 0 5px 15px 0 rgba(216, 220, 235, 1),
+    0 2.5px 3px -1.5px rgba(200, 207, 233, 1),
+    0 4.5px 5px -1px rgba(216, 220, 235, 1);
+  border-radius: 12px 0 0 12px;
+  background-color: rgba(255, 255, 255, 1);
+  position: fixed;
+  right: -591px;
+  top: 0;
+  bottom: 0;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  transition: right 0.25s ease-out;
+
+  &.open {
+    right: 0;
+  }
+}
+
+/* ── Header ── */
+.panel-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 16px 24px 0 24px;
+}
+
+.header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.panel-title {
+  margin: 0;
+  color: rgba(47, 48, 89, 1);
+  font-family: CircularStd-Medium, 'Circular Std', sans-serif;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 25px;
+}
+
+.panel-subtitle {
+  margin: 0;
+  color: rgba(104, 113, 150, 1);
+  font-family: CircularStd-Book, 'Circular Std', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 20px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 9px;
+}
+
+/* ── Cancel button ── */
+.btn-cancel {
+  width: 66px;
+  height: 32px;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 1),
+    0 1px 3px 0 rgba(200, 207, 233, 1);
+  border-radius: 7px;
+  background-color: rgba(255, 255, 255, 1);
+  border: none;
+  cursor: pointer;
+  font-family: CircularStd-Book, 'Circular Std', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(47, 48, 89, 1);
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background-color: rgba(242, 243, 245, 1);
+  }
+}
+
+/* ── Create/Save button ── */
+.btn-create {
+  width: 66px;
+  height: 32px;
+  box-shadow: 0 0 0 1px rgba(86, 89, 255, 1),
+    0 1px 3px 0 rgba(200, 207, 233, 1);
+  border-radius: 7px;
+  background-color: rgba(86, 89, 255, 1);
+  border: none;
+  cursor: pointer;
+  font-family: CircularStd-Book, 'Circular Std', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 1);
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background-color: rgba(62, 64, 219, 1);
+  }
+}
+
+/* ── Header divider ── */
+.header-divider {
+  height: 1px;
+  background-color: rgba(216, 220, 235, 1);
+  margin-top: 16px;
+}
+
+/* ── Error banner ── */
+.error-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 16px 24px 0 24px;
+  padding: 10px 14px;
+  border-radius: 6px;
+  background-color: rgba(255, 235, 235, 1);
+  border: 1px solid rgba(255, 200, 200, 1);
+
+  .error-icon {
+    flex-shrink: 0;
+    color: rgba(220, 38, 38, 1);
+  }
+
+  .error-text {
+    font-family: CircularStd-Book, 'Circular Std', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 18px;
+    color: rgba(185, 28, 28, 1);
+  }
+}
+
+/* ── Form content ── */
+.panel-content {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ── Form group ── */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* ── Field labels ── */
+.field-label {
+  color: rgba(104, 113, 150, 1);
+  font-family: CircularStd-Regular, 'Circular Std', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16px;
+}
+
+/* ── Input fields ── */
+.field-input {
+  width: 100%;
+  height: 38px;
+  box-shadow: 0 0 0 1px rgba(216, 220, 235, 1),
+    0 1.5px 3px -1.5px rgba(200, 207, 233, 1),
+    0 1px 0.5px -1px rgba(216, 220, 235, 1);
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 1);
+  border: none;
+  padding: 0 14px;
+  box-sizing: border-box;
+  font-family: CircularStd-Regular, 'Circular Std', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(3, 9, 41, 1);
+  outline: none;
+  transition: box-shadow 0.15s ease;
+
+  &::placeholder {
+    color: rgba(164, 170, 192, 1);
+    font-family: CircularStd-Regular, 'Circular Std', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 2px rgba(170, 175, 255, 1);
+  }
+
+  &.field-error {
+    box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.5);
+  }
+}
+
+/* ── Validation hint text ── */
+.validation-hint {
+  font-family: CircularStd-Book, 'Circular Std', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: rgba(220, 38, 38, 1);
+  line-height: 16px;
+}
+
+/* ── Status badge (reused in ng-select templates) ── */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 22px;
+  border-radius: 5px;
+  padding: 0 8px;
+  font-family: CircularStd-Book, 'Circular Std', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  white-space: nowrap;
+
+  &.badge-open {
+    background-color: rgba(228, 253, 255, 1);
+    border: 1px solid rgba(206, 251, 255, 1);
+    color: rgba(0, 148, 168, 1);
+  }
+
+  &.badge-in-progress {
+    background-color: rgba(214, 216, 255, 1);
+    color: rgba(62, 64, 219, 1);
+  }
+
+  &.badge-complete {
+    background-color: rgba(225, 255, 204, 1);
+    color: rgba(8, 162, 104, 1);
+  }
+
+  &.badge-blocked {
+    background-color: rgba(252, 238, 181, 1);
+    color: rgba(177, 54, 0, 1);
+  }
+}
+
+/* ── ng-select overrides for status dropdown ── */
+:host ::ng-deep .status-select {
+
+  .ng-select-container {
+    height: 38px !important;
+    min-height: 38px !important;
+    box-shadow: 0 0 0 1px rgba(216, 220, 235, 1),
+      0 1.5px 3px -1.5px rgba(200, 207, 233, 1),
+      0 1px 0.5px -1px rgba(216, 220, 235, 1);
+    border: none !important;
+    border-radius: 5px !important;
+    background-color: #fff !important;
+    padding: 0 8px !important;
+    cursor: pointer;
+    transition: box-shadow 0.15s ease;
+  }
+
+  &.ng-select-focused .ng-select-container {
+    box-shadow: 0 0 0 2px rgba(170, 175, 255, 1) !important;
+  }
+
+  .ng-arrow-wrapper {
+    padding-right: 0;
+
+    .ng-arrow {
+      border-color: rgba(104, 113, 150, 1) transparent transparent;
+      border-width: 5px 5px 2.5px;
+    }
+  }
+
+  .ng-value-container {
+    padding: 0 !important;
+
+    .ng-value {
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  .ng-clear-wrapper {
+    display: none;
+  }
+}
+
+/* ── Date input field styling ── */
+.date-input {
+  cursor: pointer;
+  color: rgba(164, 170, 192, 1);
+
+  &.has-value {
+    color: rgba(3, 9, 41, 1);
+  }
+}
+
+/* ── Inline datepicker wrapper ──────────────────────────────── */
+/* The picker now renders INSIDE the component DOM (not body),  */
+/* so :host ::ng-deep DOES reach it here.                       */
+.date-field-group {
+  position: relative;
+}
+
+.inline-datepicker-wrapper {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: 1100;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(12, 24, 48, 0.12);
+  border: 1px solid rgba(216, 220, 235, 1);
+  overflow: hidden;
+}
+
+/* Deep overrides — safe here because picker is inside host DOM */
+:host ::ng-deep .inline-datepicker-wrapper {
+
+  ngb-datepicker {
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+  }
+
+  // Header with month/year selects
+  .ngb-dp-header {
+    display: flex !important;
+    align-items: center !important;
+    background: #fff !important;
+    border-bottom: 1px solid rgba(216, 220, 235, 0.6) !important;
+    padding: 10px 8px 8px !important;
+    min-height: 44px !important;
+  }
+
+  ngb-datepicker-navigation {
+    display: flex !important;
+    align-items: center !important;
+    width: 100% !important;
+  }
+
+  .ngb-dp-navigation-select {
+    display: flex !important;
+    gap: 6px !important;
+    flex: 1 1 9rem !important;
+    justify-content: center !important;
+  }
+
+  .ngb-dp-navigation-select select {
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    color: rgba(47, 48, 89, 1) !important;
+    background: rgba(250, 251, 253, 1) !important;
+    border: 1px solid rgba(216, 220, 235, 1) !important;
+    border-radius: 6px !important;
+    padding: 4px 8px !important;
+    cursor: pointer !important;
+    appearance: auto !important;
+    -webkit-appearance: menulist !important;
+
+    &:focus {
+      outline: none !important;
+      border-color: rgba(86, 89, 255, 1) !important;
+    }
+  }
+
+  .ngb-dp-arrow {
+    display: flex !important;
+    align-items: center !important;
+  }
+
+  .ngb-dp-arrow button {
+    background: transparent !important;
+    border: none !important;
+    padding: 4px 6px !important;
+    cursor: pointer !important;
+    border-radius: 4px !important;
+
+    &:hover { background: rgba(86, 89, 255, 0.08) !important; }
+    &:hover .ngb-dp-navigation-chevron { border-color: rgba(86, 89, 255, 1) !important; }
+  }
+
+  .ngb-dp-navigation-chevron {
+    border-color: rgba(47, 48, 89, 1) !important;
+  }
+
+  // Day cells
+  .ngb-dp-day .btn-light {
+    border-radius: 6px !important;
+    font-size: 13px !important;
+    color: rgba(47, 48, 89, 1) !important;
+
+    &:hover { background-color: rgba(86, 89, 255, 0.1) !important; }
+  }
+
+  .ngb-dp-day .btn-light.bg-primary,
+  .ngb-dp-day .btn-light.active {
+    background-color: rgba(86, 89, 255, 1) !important;
+    color: #fff !important;
+    border-radius: 6px !important;
+  }
+
+  .ngb-dp-weekday {
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    font-style: italic !important;
+    color: rgba(104, 113, 150, 1) !important;
+  }
+
+  .ngb-dp-week-number {
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    font-style: italic !important;
+    color: rgba(104, 113, 150, 0.65) !important;
+  }
+
+  .text-muted {
+    color: rgba(164, 170, 192, 0.55) !important;
+  }
+
+  .ngb-dp-months {
+    padding: 6px 8px 10px !important;
+  }
+}
