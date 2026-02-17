@@ -1,0 +1,15 @@
+<div class="work-center-selector">
+  <div class="selector-header">
+    <span class="selector-title">Work Center</span>
+  </div>
+
+  <div class="selector-list">
+    <button
+      *ngFor="let center of workCenters()"
+      [class.selected]="isSelected(center.docId)"
+      (click)="selectWorkCenter(center.docId)"
+      class="center-item">
+      <span class="center-name">{{ center.data.name }}</span>
+    </button>
+  </div>
+</div>
