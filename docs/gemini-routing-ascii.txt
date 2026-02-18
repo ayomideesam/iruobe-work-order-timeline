@@ -1,0 +1,24 @@
+Manufacturing Order -> Routing Steps -> Work Orders (ASCII)
+
+ManufacturingOrder[MO-12345]
+|
++-- RoutingStep[RS-01]  : Cutting
+|   +-- WorkOrder[WO-0001]
+|   +-- WorkOrder[WO-0002]
+|
++-- RoutingStep[RS-02]  : Machining
+|   +-- WorkOrder[WO-0003]
+|   +-- WorkOrder[WO-0004]
+|
++-- RoutingStep[RS-03]  : Assembly
+|   +-- WorkOrder[WO-0005]
+|   +-- WorkOrder[WO-0006]
+|
++-- RoutingStep[RS-04]  : Quality
+    +-- WorkOrder[WO-0007]
+    +-- WorkOrder[WO-0008]
+
+Notes:
+- One Manufacturing Order can generate one or more RoutingSteps depending on the routing planner.
+- Each RoutingStep corresponds to a Work Order scheduled on a specific Work Center.
+- Dependencies: RS-02 (Machining) often depends on completion of RS-01 (Cutting) for the same MO.
