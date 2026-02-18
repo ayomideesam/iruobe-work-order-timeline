@@ -4,7 +4,7 @@ import { TimelineHeaderComponent } from '../timeline-header/timeline-header.comp
 import { TimelineGridComponent, PanelOpenEvent } from '../timeline-grid/timeline-grid.component';
 import { WorkOrderPanelComponent } from '../work-order-panel/work-order-panel.component';
 import { WorkOrderDocument } from 'src/app/core/models';
-import { InactivityService } from 'src/app/core/services';
+import { InactivityService, TimelineZoomService } from 'src/app/core/services';
 
 @Component({
   selector: 'app-timeline-container',
@@ -15,6 +15,7 @@ import { InactivityService } from 'src/app/core/services';
 })
 export class TimelineContainerComponent implements OnDestroy {
   private readonly inactivity = inject(InactivityService);
+  private readonly zoomService = inject(TimelineZoomService);
 
   @ViewChild('timelineGrid') timelineGrid!: TimelineGridComponent;
 
@@ -38,6 +39,7 @@ export class TimelineContainerComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.inactivity.stop();
+    this.zoomService.setZoom('month'); // Reset zoom so header and grid stay in sync on re-entry
   }
 
   onOpenPanel(event: PanelOpenEvent): void {

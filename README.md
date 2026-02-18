@@ -1,395 +1,129 @@
 # Work Order Schedule Timeline
 
-An interactive timeline component for visualizing, creating, and editing work orders across multiple work centers in a manufacturing ERP system.
+**Frontend Technical Test — by Iruobe Akhigbe Iruobe**
+
+An interactive timeline component for visualizing, creating, and editing work orders across multiple work centers in a manufacturing ERP system, built with Angular 19.
+
+---
 
 ## Overview
 
 This Angular 19 application provides an intuitive interface for manufacturing planners to:
-- Visualize work orders across multiple work centers at different time scales (Day/Week/Month)
-- Quickly identify work order status with color-coded indicators
-- Create new work orders with automatic date prefill from timeline clicks
-- Edit existing work orders with inline validation
+- Visualize **45 work orders** across **9 work centers** at Day, Week, and Month timescales
+- Quickly identify work order status with color-coded bars and badges
+- Create new work orders by clicking any empty timeline cell (date auto-prefilled from click position)
+- Edit existing work orders via the three-dot dropdown menu
 - Detect and prevent overlapping work orders on the same work center
-- Switch between different zoom levels for flexible planning horizons
+- Navigate instantly to today's date with the **Today** button
+- Persist all changes across page refreshes via **localStorage**
+
+---
 
 ## Features
 
-### Core Features
-- **Interactive Timeline Grid** - Horizontally scrollable timeline with fixed work center panel
-- **Multiple Zoom Levels** - Day, Week, and Month views for different planning granularities
-- **Work Order Visualization** - Color-coded status bars with work order details
-- **Create/Edit Panel** - Slide-out form panel with full validation
-- **Overlap Detection** - Prevents scheduling conflicts on the same work center
-- **Status Management** - Open, In Progress, Complete, and Blocked statuses
-- **Current Date Indicator** - Visual marker showing today's date on timeline
+### Core Features (Required)
+- **Interactive Timeline Grid** — Horizontally scrollable grid with a fixed work center panel on the left
+- **Day / Week / Month Zoom** — Timescale dropdown switches column granularity; grid and header update in sync
+- **Work Order Bars** — Color-coded status bars with name label, status badge, and three-dot action menu (Edit / Delete)
+- **Create Panel** — Slide-out panel triggered by clicking an empty timeline area; start date pre-filled from click position, end date defaults to start + 7 days
+- **Edit Panel** — Same panel with existing data pre-populated; Save updates the work order in place
+- **Overlap Detection** — Error shown if a new or edited work order would overlap an existing one on the same work center
+- **Status Management** — Open (blue), In Progress (purple), Complete (green), Blocked (orange)
+- **Current Date Indicator** — Blue vertical line marking today across the full grid height
 
-### Bonus Features (Future)
-- [ ] LocalStorage persistence - Work orders survive page refresh
-- [ ] Smooth animations - Panel slide-in/out and hover effects
-- [ ] Keyboard navigation - Tab through form, Escape to close panel
-- [ ] Infinite horizontal scroll - Dynamically load past/future dates
-- [ ] "Today" button - Quick navigation to current date
-- [ ] Tooltip on hover - Show full work order details
+### Bonus Features (Implemented ✅)
+- ✅ **localStorage Persistence** — All work orders survive page refresh; changes persist between sessions
+- ✅ **Smooth Animations** — Panel slides in/out, status badges and bars have CSS transitions
+- ✅ **Keyboard Navigation** — Arrow keys navigate between work order bars; Enter opens the edit panel; Escape closes any open panel or dropdown
+- ✅ **Today Button** — Scrolls the timeline horizontally to center on today's date
+- ✅ **Tooltips on Hover** — Full work order name, start/end dates, and status shown via ngb-tooltip on bar hover
+- ✅ **Toast Notifications** — Auto-dismissing success/error toast system for create, update, and delete actions
+- ✅ **Landing Page** — Splash screen with "Proceed to Dashboard" CTA before entering the timeline
+- ✅ **Inactivity Detection** — Auto-saves state and warns user after period of inactivity
+- ✅ **Zoom State Reset on Navigation** — Timescale automatically resets to Month when leaving and returning to the dashboard, keeping grid and header in sync
 
 ## Technology Stack
 
 | Technology | Version | Purpose |
 |-----------|---------|---------|
-| Angular | 19.2.18 | Core framework |
-| TypeScript | 5.7.2 | Type-safe development |
-| SCSS | - | Styling |
-| Bootstrap | 5.3.8 | CSS framework |
-| ng-select | 14.9.0 | Dropdown/select components |
-| ng-bootstrap | 18.0.0 | ngb-datepicker for date selection |
-| date-fns | 4.1.0 | Date manipulation and formatting |
-| RxJS | 7.8.0 | Reactive programming |
+| Angular | 19.2.18 | Core framework with standalone components & signals |
+| TypeScript | 5.7.2 | Strict-mode type safety |
+| SCSS | — | Component & global styles with CSS custom properties |
+| Bootstrap | 5.3.8 | CSS utility foundation |
+| ng-select | 14.9.0 | Status and zoom level dropdowns |
+| ng-bootstrap | 18.0.0 | Datepicker (ngb-datepicker) and tooltips (ngb-tooltip) |
+| date-fns | 4.1.0 | Date arithmetic and formatting |
+| RxJS | 7.8.0 | Reactive streams (toast notifications, inactivity) |
+
+---
 
 ## Project Structure
 
 ```
-work-order-timeline/
-├── src/
-│   ├── app/
-│   │   ├── core/
-│   │   │   ├── models/
-│   │   │   │   ├── work-center.model.ts
-│   │   │   │   ├── work-order.model.ts
-│   │   │   │   ├── timeline-config.model.ts
-│   │   │   │   ├── zoom-level.type.ts
-│   │   │   │   └── index.ts
-│   │   │   │
-│   │   │   ├── services/
-│   │   │   │   ├── work-order.service.ts
-│   │   │   │   ├── date-calculation.service.ts
-│   │   │   │   ├── overlap-detection.service.ts
-│   │   │   │   ├── timeline-state.service.ts
-│   │   │   │   └── index.ts
-│   │   │   │
-│   │   │   ├── data/
-│   │   │   │   └── sample-data.ts
-│   │   │   │
-│   │   │   └── constants/
-│   │   │       ├── timeline.constants.ts
-│   │   │       └── colors.constants.ts
-│   │   │
-│   │   ├── features/
-│   │   │   └── timeline/
-│   │   │       ├── components/
-│   │   │       │   ├── timeline-container/
-│   │   │       │   │   ├── timeline-container.component.ts
-│   │   │       │   │   ├── timeline-container.component.html
-│   │   │       │   │   ├── timeline-container.component.scss
-│   │   │       │   │   └── timeline-container.component.spec.ts
-│   │   │       │   │
-│   │   │       │   ├── timeline-header/
-│   │   │       │   │   ├── timeline-header.component.ts
-│   │   │       │   │   ├── timeline-header.component.html
-│   │   │       │   │   ├── timeline-header.component.scss
-│   │   │       │   │   └── timeline-header.component.spec.ts
-│   │   │       │   │
-│   │   │       │   ├── timeline-grid/
-│   │   │       │   │   ├── timeline-grid.component.ts
-│   │   │       │   │   ├── timeline-grid.component.html
-│   │   │       │   │   ├── timeline-grid.component.scss
-│   │   │       │   │   └── timeline-grid.component.spec.ts
-│   │   │       │   │
-│   │   │       │   ├── work-center-row/
-│   │   │       │   │   ├── work-center-row.component.ts
-│   │   │       │   │   ├── work-center-row.component.html
-│   │   │       │   │   ├── work-center-row.component.scss
-│   │   │       │   │   └── work-center-row.component.spec.ts
-│   │   │       │   │
-│   │   │       │   ├── work-order-bar/
-│   │   │       │   │   ├── work-order-bar.component.ts
-│   │   │       │   │   ├── work-order-bar.component.html
-│   │   │       │   │   ├── work-order-bar.component.scss
-│   │   │       │   │   └── work-order-bar.component.spec.ts
-│   │   │       │   │
-│   │   │       │   ├── work-order-panel/
-│   │   │       │   │   ├── work-order-panel.component.ts
-│   │   │       │   │   ├── work-order-panel.component.html
-│   │   │       │   │   ├── work-order-panel.component.scss
-│   │   │       │   │   └── work-order-panel.component.spec.ts
-│   │   │       │   │
-│   │   │       │   ├── date-column-header/
-│   │   │       │   │   ├── date-column-header.component.ts
-│   │   │       │   │   ├── date-column-header.component.html
-│   │   │       │   │   ├── date-column-header.component.scss
-│   │   │       │   │   └── date-column-header.component.spec.ts
-│   │   │       │   │
-│   │   │       │   ├── current-day-indicator/
-│   │   │       │   │   ├── current-day-indicator.component.ts
-│   │   │       │   │   ├── current-day-indicator.component.html
-│   │   │       │   │   ├── current-day-indicator.component.scss
-│   │   │       │   │   └── current-day-indicator.component.spec.ts
-│   │   │       │   │
-│   │   │       │   └── three-dot-menu/
-│   │   │       │       ├── three-dot-menu.component.ts
-│   │   │       │       ├── three-dot-menu.component.html
-│   │   │       │       ├── three-dot-menu.component.scss
-│   │   │       │       └── three-dot-menu.component.spec.ts
-│   │   │       │
-│   │   │       └── utils/
-│   │   │           ├── date.utils.ts
-│   │   │           └── position.utils.ts
-│   │   │
-│   │   ├── shared/
-│   │   │   ├── components/
-│   │   │   │   ├── status-badge/
-│   │   │   │   │   ├── status-badge.component.ts
-│   │   │   │   │   ├── status-badge.component.html
-│   │   │   │   │   ├── status-badge.component.scss
-│   │   │   │   │   └── status-badge.component.spec.ts
-│   │   │   │   │
-│   │   │   │   ├── custom-button/
-│   │   │   │   │   ├── custom-button.component.ts
-│   │   │   │   │   ├── custom-button.component.html
-│   │   │   │   │   ├── custom-button.component.scss
-│   │   │   │   │   └── custom-button.component.spec.ts
-│   │   │   │   │
-│   │   │   │   └── form-field/
-│   │   │   │       ├── form-field.component.ts
-│   │   │   │       ├── form-field.component.html
-│   │   │   │       ├── form-field.component.scss
-│   │   │   │       └── form-field.component.spec.ts
-│   │   │   │
-│   │   │   ├── directives/
-│   │   │   │   ├── click-outside.directive.ts
-│   │   │   │   ├── horizontal-scroll.directive.ts
-│   │   │   │   └── row-hover.directive.ts
-│   │   │   │
-│   │   │   └── pipes/
-│   │   │       ├── date-format.pipe.ts
-│   │   │       └── safe-html.pipe.ts
-│   │   │
-│   │   ├── app.component.ts
-│   │   ├── app.component.html
-│   │   ├── app.component.scss
-│   │   └── app.config.ts
-│   │
-│   ├── assets/
-│   │   ├── fonts/
-│   │   └── images/
-│   │
-│   ├── styles/
-│   │   ├── _variables.scss
-│   │   ├── _mixins.scss
-│   │   ├── _typography.scss
-│   │   ├── _colors.scss
-│   │   ├── _grid.scss
-│   │   ├── _forms.scss
-│   │   └── styles.scss
-│   │
-│   ├── index.html
-│   └── main.ts
+src/app/
+├── core/
+│   ├── constants/           # Timeline & color constants
+│   ├── data/                # demo-100-workorders.json, sample-data.ts
+│   ├── directives/          # UnsubscribeDirective base class
+│   ├── models/              # WorkOrder, WorkCenter, ZoomLevel, TimelineConfig
+│   └── services/
+│       ├── work-order.service.ts        # CRUD + localStorage persistence
+│       ├── work-center.service.ts       # 9 manufacturing centers
+│       ├── timeline-zoom.service.ts     # Zoom level signal + column generation
+│       ├── date-filter.service.ts       # Date range filtering
+│       ├── date-calculation.service.ts  # Pixel positioning math
+│       ├── overlap-detection.service.ts # Conflict detection
+│       ├── timeline-state.service.ts    # Shared signal state
+│       ├── toast.service.ts             # Notification stream
+│       └── inactivity.service.ts        # Idle detection
 │
-├── .gitignore
-├── angular.json
-├── package.json
-├── tsconfig.json
-├── tsconfig.app.json
-├── tsconfig.spec.json
-└── README.md
+├── features/timeline/components/
+│   ├── timeline-container/     # Parent orchestrator (panel state, signal coordination)
+│   ├── timeline-header/        # Zoom dropdown, Today button, date filter
+│   ├── timeline-grid/          # Core grid (column generation, bar positioning, keyboard nav)
+│   ├── timeline-header/        # Zoom controls + Today button
+│   ├── work-order-bar/         # Bar visualization with fixed-position dropdown
+│   ├── work-order-panel/       # Create/Edit slide-out form panel
+│   ├── work-center-row/        # Row layout per work center
+│   ├── current-day-indicator/  # Blue vertical today line
+│   ├── date-column-header/     # Column header labels
+│   ├── work-center-selector/   # Filter work centers
+│   └── three-dot-menu/         # Edit / Delete actions dropdown
+│
+├── shared/
+│   ├── components/status-badge/   # Reusable status pill
+│   └── components/toast/          # Auto-dismiss toast notification
+│
+├── public-landing.component.ts    # Splash / landing page
+├── app.component.ts
+└── app.config.ts
 ```
+
+---
 
 ## Getting Started
 
 ### Prerequisites
 - Node.js 20.x or higher
 - npm 10.x or higher
-- Git
 
 ### Installation
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/ayomideesam/iruobe-work-order-timeline.git
-   cd iruobe-work-order-timeline
-   ```
+```bash
+git clone https://github.com/ayomideesam/iruobe-work-order-timeline.git
+cd iruobe-work-order-timeline
+npm install
+```
 
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-   > Note: The `.npmrc` file enables `legacy-peer-deps=true` to ensure compatibility between ng-select, ng-bootstrap, and Angular 19.
-
-3. **Verify setup**
-   ```bash
-   ng version
-   ```
-   Expected: Angular CLI 19.2.15 with Angular 19.2.18
+> The `.npmrc` file sets `legacy-peer-deps=true` for ng-select / ng-bootstrap / Angular 19 compatibility.
 
 ### Development Server
 
-Run the development server:
 ```bash
 npm start
 ```
 
-Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
-
-### Building
-
-Build for production:
-```bash
-npm run build
-```
-
-Output will be in the `dist/` directory.
-
-## Data Structures
-
-### WorkCenter
-
-Represents a production line, machine, or work area.
-
-```typescript
-interface WorkCenterDocument {
-  docId: string;
-  docType: 'workCenter';
-  data: {
-    name: string;
-  };
-}
-```
-
-### WorkOrder
-
-Represents a scheduled work task with dates and status.
-
-```typescript
-interface WorkOrderDocument {
-  docId: string;
-  docType: 'workOrder';
-  data: {
-    name: string;
-    workCenterId: string;           // References WorkCenterDocument.docId
-    status: 'open' | 'in-progress' | 'complete' | 'blocked';
-    startDate: string;              // ISO format: "2025-01-15"
-    endDate: string;                // ISO format: "2025-01-22"
-  };
-}
-```
-
-## Sample Data
-
-The application includes hardcoded sample data demonstrating:
-- **5+ Work Centers**: Extrusion Line A, CNC Machine 1, Assembly Station, Quality Control, Packaging Line
-- **8+ Work Orders**: Distributed across different centers with varying statuses
-- **All Status Types**: Open, In Progress, Complete, and Blocked examples
-- **Multiple Orders per Center**: Non-overlapping orders on same work center
-- **Varied Date Ranges**: Orders spanning different durations
-
-See `src/app/data/sample-data.ts` for the full dataset.
-
-## Usage Guide
-
-### Viewing the Timeline
-
-1. **Select Time Scale**: Use the dropdown in the header to switch between Day, Week, and Month views
-2. **Scroll Timeline**: Use horizontal scroll to navigate past/future dates
-3. **View Work Orders**: See color-coded bars representing scheduled work orders
-4. **Identify Status**: Check the status badge on each work order bar (Open, In Progress, Complete, Blocked)
-
-### Creating a Work Order
-
-1. **Click Empty Area**: Click on any empty space in the timeline grid
-2. **Form Opens**: A slide-out panel appears from the right with a pre-filled start date
-3. **Fill Details**:
-   - Enter work order name
-   - Select status (defaults to "Open")
-   - Adjust start and end dates using the datepicker
-   - End date defaults to start date + 7 days
-4. **Validate**: Form validates all required fields and checks for overlaps
-5. **Create**: Click "Create" button to save and close panel
-
-### Editing a Work Order
-
-1. **Open Menu**: Click the three-dot menu (⋯) on any work order bar
-2. **Select Edit**: Click "Edit" from the dropdown
-3. **Modify Details**: Update any field in the form
-4. **Validate**: Overlap detection excludes the order being edited
-5. **Save**: Click "Save" button to update and close panel
-
-### Deleting a Work Order
-
-1. **Open Menu**: Click the three-dot menu (⋯) on any work order bar
-2. **Confirm Delete**: Click "Delete" and confirm the action
-3. **Updated Timeline**: The work order is immediately removed from the timeline
-
-### Error Handling
-
-**Overlap Detection Error**: If you try to create or edit a work order that overlaps with an existing order on the same work center, you'll see an error message. Adjust the dates to resolve the conflict.
-
-## Design Reference
-
-The UI is designed to match the Sketch file specifications. Key design elements:
-- **Font Family**: Circular Std (imported from Naologic assets)
-- **Color Scheme**: 
-  - Open: Blue
-  - In Progress: Purple/Blue
-  - Complete: Green
-  - Blocked: Yellow/Orange
-- **Spacing**: Follows 8px grid system
-- **Responsive**: Acceptable for screens 1024px and larger
-
-Sketch Design File: https://www.sketch.com/s/d56a77de-9753-45a8-af7a-d93a42276667
-
-## Code Architecture
-
-### Standalone Components
-All components are built as Angular standalone components for simplified dependency management:
-
-```typescript
-@Component({
-  selector: 'app-timeline',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, NgSelectComponent, NgbModule],
-  templateUrl: './timeline.component.html',
-  styleUrls: ['./timeline.component.scss']
-})
-export class TimelineComponent { }
-```
-
-### Reactive Forms
-Form management uses Angular's Reactive Forms with FormGroup and Validators:
-
-```typescript
-createForm = this.fb.group({
-  name: ['', [Validators.required]],
-  status: ['open', [Validators.required]],
-  startDate: ['', [Validators.required]],
-  endDate: ['', [Validators.required]]
-});
-```
-
-### Services
-Services handle business logic and data management:
-- **WorkOrderService**: CRUD operations on work orders, overlap detection
-- **WorkCenterService**: Retrieval and management of work centers
-
-## Testing
-
-### Running Tests
-
-```bash
-npm test
-```
-
-Tests use Karma and Jasmine. Run with coverage:
-
-```bash
-npm test -- --code-coverage
-```
-
-### Test Coverage
-
-Current coverage:
-- Component logic: Unit tested
-- Services: Unit tested with mocked data
-- Overlap detection: Edge case coverage
-
-## Build & Deployment
+Navigate to `http://localhost:4200/`. Hot-reload is enabled.
 
 ### Production Build
 
@@ -397,162 +131,154 @@ Current coverage:
 npm run build
 ```
 
-Built files are in `dist/iruobe-work-order-timeline/`.
+Output: `dist/iruobe-work-order-timeline/`
 
-### Deploy Considerations
+---
 
-- Application uses standalone components (no module bootstrapping needed)
-- All data is currently in-memory (no backend API calls)
-- No authentication required for MVP
-- Works on any static hosting (Vercel, Netlify, GitHub Pages, etc.)
+## Sample Data
 
-## Configuration
+The application ships with **45 work orders** spread across **9 work centers** spanning Jan 2024 – Dec 2026. All orders are non-overlapping within their work center.
 
-### Environment Variables
+### Work Centers
 
-Create `.env` files for different environments:
+| ID | Name |
+|----|------|
+| wc-1 | Genesis Hardware |
+| wc-2 | Rodriques Electrics |
+| wc-3 | Dangote Industries |
+| wc-4 | McMarrow Distribution |
+| wc-5 | Spartan Manufacturing |
+| wc-6 | BUA Group |
+| wc-7 | Sany Heavy Industry |
+| wc-8 | Siemens Gamesa |
+| wc-9 | Konsulting Inc |
+
+### Work Order Stats
+
+| Status | Count |
+|--------|-------|
+| Open | 15 |
+| In Progress | 16 |
+| Complete | 8 |
+| Blocked | 6 |
+| **Total** | **45** |
+
+Data files: `src/app/core/data/demo-100-workorders.json` and `src/app/core/data/sample-data.ts`
+
+---
+
+## Data Structures
+
+```typescript
+interface WorkCenterDocument {
+  docId: string;           // e.g. "wc-1"
+  docType: 'workCenter';
+  data: { name: string };
+}
+
+interface WorkOrderDocument {
+  docId: string;           // e.g. "wo-001"
+  docType: 'workOrder';
+  data: {
+    name: string;
+    workCenterId: string;
+    status: 'open' | 'in-progress' | 'complete' | 'blocked';
+    startDate: string;     // ISO: "2026-02-01"
+    endDate: string;       // ISO: "2026-03-15"
+  };
+}
+```
+
+---
+
+## Usage Guide
+
+### Viewing the Timeline
+- Use the **Timescale** dropdown to switch between **Day**, **Week**, and **Month** views
+- Scroll horizontally to navigate past and future dates
+- Click **Today** to instantly scroll back to the current date
+
+### Creating a Work Order
+1. Click any empty cell on the timeline grid
+2. The slide-out panel opens with the start date pre-filled from the clicked position
+3. Fill in the name and status; adjust dates if needed (end date defaults to start + 7 days)
+4. Click **Create** — overlap validation runs before saving
+
+### Editing a Work Order
+1. Click the **⋯** three-dot menu on any work order bar
+2. Select **Edit**
+3. Modify fields and click **Save**
+
+### Deleting a Work Order
+1. Click the **⋯** three-dot menu on any work order bar
+2. Select **Delete** — the order is immediately removed and a toast confirms the action
+
+### Keyboard Navigation
+| Key | Action |
+|-----|--------|
+| `←` / `→` | Navigate between work order bars |
+| `↑` / `↓` | Move between work centers |
+| `Enter` | Open edit panel for focused bar |
+| `Escape` | Close panel or dropdown |
+
+---
+
+## Design Reference
+
+- **Sketch File**: https://www.sketch.com/s/d56a77de-9753-45a8-af7a-d93a42276667
+- **Font**: Circular Std
+
+```html
+<link rel="stylesheet" href="https://naologic-com-assets.naologic.com/fonts/circular-std/circular-std.css">
+```
+
+### Status Colors
+
+| Status | Color |
+|--------|-------|
+| Open | Blue |
+| In Progress | Purple |
+| Complete | Green |
+| Blocked | Orange |
+
+---
+
+## Architecture Notes
+
+- **Standalone components** throughout — no NgModules
+- **OnPush change detection** on `TimelineGridComponent` for performance
+- **Angular Signals** for reactive state (`zoomLevel`, `orders`, `isPanelOpen`, etc.)
+- **`providedIn: 'root'` services** — singletons reset on `TimelineContainerComponent` destroy to prevent state leakage between navigations
+- **localStorage persistence** via `WorkOrderService` — all CRUD operations serialize to `localStorage` automatically
+- **Custom `NgbDateParserFormatter`** for MM.DD.YYYY date format in the panel form
+
+---
+
+## Build Scripts
 
 ```bash
-# .env.development
-NG_CLI_ANALYTICS=false
-
-# .env.production
-NG_CLI_ANALYTICS=false
+npm start          # Dev server on :4200
+npm run build      # Production build
+npm test           # Karma + Jasmine unit tests
+npm run watch      # Dev build with watch mode
 ```
-
-### Build Modes
-
-```bash
-# Development server on port 4150 (auto-open browser)
-npm start
-
-# Development with HMR (Hot Module Replacement) for faster reload
-npm run start:hmr
-
-# Production build
-npm run build
-
-# Production build with stats
-npm run build:prod
-
-# Production build with stats JSON for bundle analysis
-npm run build:stats
-
-# Development with watch mode (rebuild on file changes)
-npm run watch
-
-# Testing
-npm test
-
-# Angular utilities
-npm run ng -- <command>
-```
-
-## Troubleshooting
-
-### Common Issues
-
-**Problem**: `npm install` fails with peer dependency errors
-- **Solution**: `.npmrc` is configured with `legacy-peer-deps=true`. If issues persist, ensure Node 20.x is installed.
-
-**Problem**: ng-bootstrap datepicker not showing
-- **Solution**: Ensure `NgbModule` is imported. Check browser console for errors.
-
-**Problem**: Styles not loading correctly
-- **Solution**: Boot CSS must be imported. Check `styles.scss` includes Bootstrap import.
-
-**Problem**: Date calculations appear off
-- **Solution**: Verify `date-fns` is properly installed and imported in service files.
-
-## Performance Optimization
-
-### Implemented
-- OnPush change detection strategy (where applicable)
-- TrackBy functions in *ngFor loops
-- Lazy loading of route modules (if routing added)
-
-### Future Optimizations
-- Virtual scrolling for large date ranges (infinite scroll)
-- Memoization of date calculations
-- Web Worker for heavy computations
-- Service Worker for offline support
-
-## Browser Support
-
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
-
-Does **not** support IE 11.
-
-## Contributing
-
-### Commit Message Format
-
-Follow conventional commits:
-
-```
-<type>(<scope>): <subject>
-
-<body>
-
-<footer>
-```
-
-**Types**: `Feat`, `Fix`, `Docs`, `Style`, `Refactor`, `Test`, `Chore`
-
-**Examples**:
-```
-Feat(timeline): Add Day/Week/Month zoom levels
-Fix(overlap): Correct overlap detection logic
-Docs(readme): Update installation instructions
-```
-
-### Branch Naming
-
-- Feature: `feature/timeline-zoom`
-- Fix: `fix/overlap-detection`
-- Docs: `docs/update-readme`
-
-## License
-
-MIT License - See LICENSE file for details
-
-## Contact
-
-For questions or support, contact the Naologic team.
 
 ---
 
 ## Submission Checklist
 
-- [ ] Working Angular 19+ application
-- [ ] All core features implemented
-- [ ] Pixel-perfect design matching Sketch file
-- [ ] Sample data with 5+ work centers and 8+ work orders
-- [ ] All 4 status types demonstrated
-- [ ] README documentation complete
-- [ ] Code comments on complex logic
-- [ ] Clean git history with meaningful commits
-- [ ] Public GitHub repository
-- [ ] Loom demo video (5-10 minutes)
+- ✅ Working Angular 19+ application
+- ✅ All core features implemented (Timeline grid, zoom levels, bars, create/edit panel, overlap detection)
+- ✅ 9 work centers and 45 work orders in sample data
+- ✅ All 4 status types demonstrated
+- ✅ localStorage persistence
+- ✅ Smooth animations and transitions
+- ✅ Keyboard navigation
+- ✅ Today button
+- ✅ Tooltips on hover
+- ✅ Toast notifications
+- ✅ Landing page
+- ✅ Clean git history with 12 logical commits (Feb 15–18, 2026)
+- ✅ README documentation complete
+- [ ] Loom demo video (5–10 min) — pending
 
-## Bonus Features Implemented
-
-- [ ] LocalStorage persistence
-- [ ] Smooth animations and transitions
-- [ ] Keyboard navigation
-- [ ] Infinite horizontal scroll
-- [ ] "Today" button
-- [ ] Tooltip on hover
-- [ ] Unit test suite
-- [ ] E2E test suite
-- [ ] Accessibility (ARIA labels, focus management)
-- [ ] Performance optimizations (OnPush, trackBy, virtual scroll)
-
----
-
-**Last Updated**: February 2026
-**Version**: 1.0.0-alpha
-**Status**: In Development
