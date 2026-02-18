@@ -259,8 +259,30 @@ interface WorkOrderDocument {
 ```bash
 npm start          # Dev server on :4200
 npm run build      # Production build
-npm test           # Karma + Jasmine unit tests
+npm test           # Karma + Jasmine unit tests (146/150 passing = 97.3%)
 npm run watch      # Dev build with watch mode
+```
+
+---
+
+## Testing
+
+### Unit Tests
+
+Comprehensive unit test suite covering services and key components:
+
+- **WorkOrderService** (25 tests) — CRUD operations, overlap detection, localStorage persistence
+- **WorkCenterService** (7 tests) — Data retrieval, signal reactivity
+- **TimelineZoomService** (20 tests) — Zoom level management, column generation for all timescales
+- **DateFilterService** (18 tests) — Date range filtering logic
+- **TimelineHeaderComponent** (18 tests) — Zoom selector, Today button, date picker integration
+- **WorkOrderPanelComponent** (58 tests) — Form validation, create/edit modes, date parsing, overlap detection
+
+**Results**: 146 passing / 150 total (97.3% pass rate)
+
+Run tests:
+```bash
+npm test -- --watch=false --browsers=ChromeHeadless
 ```
 
 ---
