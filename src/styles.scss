@@ -1,1 +1,276 @@
-/* You can add global styles to this file, and also import other style files */
+/* Global design tokens and font imports to match the Sketch spec */
+@import url('https://naologic-com-assets.naologic.com/fonts/circular-std/circular-std.css');
+@import '@ng-select/ng-select/themes/default.theme.css';
+
+:root {
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --muted: rgba(120, 128, 153, 1);
+  --primary: rgba(62, 64, 219, 1);
+  --primary-600: rgba(62, 64, 219, 1);
+  --panel-radius: 12px;
+  --card-shadow: 0 6px 24px rgba(12, 24, 48, 0.06);
+  --type-ui: "Circular-Std", system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  --type-heading: "Circular-Std", system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  background: var(--bg);
+  font-family: var(--type-ui);
+  color: #222;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body { margin: 0; }
+
+app-root {
+  display: block;
+  width: 1440px;
+  height: 1024px;
+  background: rgba(255, 255, 255, 1);
+  margin: 0 auto;
+}
+
+.ng-select {
+  font-family: var(--type-ui);
+  font-size: 13px;
+}
+
+/* ============================================================
+   ngb-datepicker — SINGLE unified global block
+   IMPORTANT: All previous ngb-datepicker blocks have been
+   removed and replaced with this one.
+
+   Why global (not component ::ng-deep):
+   - NgbInputDatepicker with container="body" appends the
+     popup to <body>, outside any Angular component shadow.
+   - :host ::ng-deep from a component never reaches it.
+
+   Why flat selectors (not nested SCSS):
+   - Nested SCSS compiles fine here but flat rules with
+     element+class are MORE specific and reliably override
+     Bootstrap utility classes like .bg-primary, .text-muted
+   ============================================================ */
+
+/* ── Popup container ─────────────────────────────────────── */
+ngb-datepicker {
+  font-family: var(--type-ui) !important;
+  border-radius: 8px !important;
+  border: 1px solid rgba(216, 220, 235, 1) !important;
+  box-shadow: 0 4px 20px rgba(12, 24, 48, 0.1) !important;
+  overflow: visible !important;
+  background: #fff !important;
+}
+
+/* ── Navigation host element (ng-bootstrap v17/v18) ─────── */
+/* ngb-datepicker-navigation is a COMPONENT with its own     */
+/* host element — it defaults to display:inline which        */
+/* causes it to collapse to zero height.                     */
+ngb-datepicker-navigation {
+  display: flex !important;
+  align-items: center !important;
+  width: 100% !important;
+}
+
+/* ── Header bar wrapping the navigation ─────────────────── */
+ngb-datepicker .ngb-dp-header {
+  display: flex !important;
+  align-items: center !important;
+  background-color: #ffffff !important;
+  border-bottom: 1px solid rgba(216, 220, 235, 0.6) !important;
+  border-radius: 8px 8px 0 0 !important;
+  padding: 10px 8px 8px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  min-height: 44px !important;
+}
+
+/* ── Month + Year select dropdowns ──────────────────────── */
+ngb-datepicker .ngb-dp-navigation-select {
+  display: flex !important;
+  gap: 6px !important;
+  flex: 1 1 9rem !important;
+  justify-content: center !important;
+}
+
+ngb-datepicker .ngb-dp-navigation-select select {
+  font-family: var(--type-ui) !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: rgba(47, 48, 89, 1) !important;
+  background: rgba(250, 251, 253, 1) !important;
+  border: 1px solid rgba(216, 220, 235, 1) !important;
+  border-radius: 6px !important;
+  padding: 4px 8px !important;
+  cursor: pointer !important;
+  appearance: auto !important;
+  -webkit-appearance: menulist !important;
+  -moz-appearance: menulist !important;
+}
+
+ngb-datepicker .ngb-dp-navigation-select select:hover {
+  border-color: rgba(86, 89, 255, 0.5) !important;
+}
+
+ngb-datepicker .ngb-dp-navigation-select select:focus {
+  outline: none !important;
+  border-color: rgba(86, 89, 255, 1) !important;
+}
+
+/* ── Prev / Next arrow buttons ───────────────────────────── */
+ngb-datepicker .ngb-dp-arrow {
+  display: flex !important;
+  align-items: center !important;
+  flex-shrink: 0 !important;
+}
+
+ngb-datepicker .ngb-dp-arrow button {
+  background: transparent !important;
+  border: none !important;
+  cursor: pointer !important;
+  padding: 4px 6px !important;
+  display: flex !important;
+  align-items: center !important;
+  border-radius: 4px !important;
+  transition: background 0.12s;
+}
+
+ngb-datepicker .ngb-dp-arrow button:hover {
+  background: rgba(86, 89, 255, 0.08) !important;
+}
+
+ngb-datepicker .ngb-dp-navigation-chevron {
+  border-color: rgba(47, 48, 89, 1) !important;
+  width: 7px !important;
+  height: 7px !important;
+}
+
+ngb-datepicker .ngb-dp-arrow button:hover .ngb-dp-navigation-chevron {
+  border-color: rgba(86, 89, 255, 1) !important;
+}
+
+/* ── Months container ────────────────────────────────────── */
+ngb-datepicker .ngb-dp-months {
+  padding: 6px 8px 10px !important;
+}
+
+/* ── Week row ────────────────────────────────────────────── */
+ngb-datepicker .ngb-dp-week {
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* ── Weekday header (M T W T F S S) ─────────────────────── */
+ngb-datepicker .ngb-dp-weekday {
+  font-family: var(--type-ui) !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  font-style: italic !important;
+  color: rgba(104, 113, 150, 1) !important;
+  width: 2rem !important;
+  height: 2rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* ── Week number column (48, 49, 50...) ──────────────────── */
+ngb-datepicker .ngb-dp-week-number {
+  font-family: var(--type-ui) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  font-style: italic !important;
+  color: rgba(104, 113, 150, 0.65) !important;
+  min-width: 1.75rem !important;
+  width: 1.75rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 2rem !important;
+}
+
+/* ── Individual day cells ────────────────────────────────── */
+ngb-datepicker .ngb-dp-day {
+  width: 2rem !important;
+  height: 2rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+ngb-datepicker .ngb-dp-day .btn-light {
+  width: 1.85rem !important;
+  height: 1.85rem !important;
+  padding: 0 !important;
+  border-radius: 6px !important;
+  font-size: 13px !important;
+  font-family: var(--type-ui) !important;
+  color: rgba(47, 48, 89, 1) !important;
+  background: transparent !important;
+  border: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: background-color 0.12s, color 0.12s;
+}
+
+ngb-datepicker .ngb-dp-day .btn-light:hover {
+  background-color: rgba(86, 89, 255, 0.1) !important;
+  color: rgba(86, 89, 255, 1) !important;
+}
+
+/* Selected day — filled indigo rounded square */
+ngb-datepicker .ngb-dp-day .btn-light.bg-primary,
+ngb-datepicker .ngb-dp-day .btn-light.active {
+  background-color: rgba(86, 89, 255, 1) !important;
+  color: #ffffff !important;
+  border-radius: 6px !important;
+}
+
+/* Outside-month days (greyed out) */
+ngb-datepicker .ngb-dp-day .btn-light.text-muted,
+ngb-datepicker .text-muted {
+  color: rgba(164, 170, 192, 0.55) !important;
+}
+
+/* ============================================================
+   Work Order Tooltip Styles
+   ============================================================ */
+.wo-tooltip {
+  &.tooltip {
+    opacity: 1;
+  }
+
+  .tooltip-inner {
+    background: #1f2933;
+    color: #ffffff;
+    font-family: var(--type-ui);
+    font-size: 12px;
+    line-height: 1.5;
+    padding: 8px 12px;
+    border-radius: 6px;
+    text-align: left;
+    white-space: pre-line;
+    max-width: 260px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Arrow colors for all placement directions */
+  &.bs-tooltip-top .tooltip-arrow::before {
+    border-top-color: #1f2933;
+  }
+  &.bs-tooltip-bottom .tooltip-arrow::before {
+    border-bottom-color: #1f2933;
+  }
+  &.bs-tooltip-start .tooltip-arrow::before {
+    border-left-color: #1f2933;
+  }
+  &.bs-tooltip-end .tooltip-arrow::before {
+    border-right-color: #1f2933;
+  }
+}
