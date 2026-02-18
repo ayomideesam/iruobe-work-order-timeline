@@ -83,8 +83,8 @@
       "name": "Major Infrastructure Migration",
       "workCenterId": "wc-9",
       "status": "open",
-      "startDate": "2025-09-10",
-      "endDate": "2026-01-05"
+      "startDate": "2025-12-25",
+      "endDate": "2026-03-20"
     }
   },
   {
@@ -116,8 +116,8 @@
       "name": "Smart Thermostat v3.2",
       "workCenterId": "wc-1",
       "status": "complete",
-      "startDate": "2026-03-09",
-      "endDate": "2026-03-22"
+      "startDate": "2026-05-01",
+      "endDate": "2026-05-30"
     }
   },
   {
@@ -138,8 +138,8 @@
       "name": "Payroll System Upgrade",
       "workCenterId": "wc-9",
       "status": "open",
-      "startDate": "2025-02-09",
-      "endDate": "2025-03-29"
+      "startDate": "2025-06-01",
+      "endDate": "2025-08-15"
     }
   },
   {
@@ -238,7 +238,7 @@
       "workCenterId": "wc-7",
       "status": "open",
       "startDate": "2025-11-01",
-      "endDate": "2026-02-28"
+      "endDate": "2026-01-25"
     }
   },
   {
@@ -325,8 +325,8 @@
       "name": "Concrete Mixer Delivery CM-55",
       "workCenterId": "wc-7",
       "status": "complete",
-      "startDate": "2026-03-01",
-      "endDate": "2026-05-15"
+      "startDate": "2026-04-20",
+      "endDate": "2026-06-30"
     }
   },
   {
@@ -348,7 +348,7 @@
       "workCenterId": "wc-3",
       "status": "in-progress",
       "startDate": "2026-01-15",
-      "endDate": "2026-04-30"
+      "endDate": "2026-03-15"
     }
   },
   {
@@ -358,8 +358,8 @@
       "name": "Petroleum Pipeline Install",
       "workCenterId": "wc-3",
       "status": "open",
-      "startDate": "2026-02-10",
-      "endDate": "2026-06-15"
+      "startDate": "2026-03-20",
+      "endDate": "2026-06-30"
     }
   },
   {
@@ -370,7 +370,7 @@
       "workCenterId": "wc-3",
       "status": "complete",
       "startDate": "2025-09-01",
-      "endDate": "2025-12-20"
+      "endDate": "2025-10-31"
     }
   },
   {
@@ -381,7 +381,7 @@
       "workCenterId": "wc-3",
       "status": "in-progress",
       "startDate": "2025-11-10",
-      "endDate": "2026-03-05"
+      "endDate": "2026-01-10"
     }
   },
   {
@@ -391,8 +391,8 @@
       "name": "Port Terminal Extension",
       "workCenterId": "wc-3",
       "status": "blocked",
-      "startDate": "2026-03-01",
-      "endDate": "2026-08-30"
+      "startDate": "2026-07-15",
+      "endDate": "2026-10-30"
     }
   },
   {
@@ -435,8 +435,8 @@
       "name": "Pile Driver Assembly PD-80",
       "workCenterId": "wc-7",
       "status": "open",
-      "startDate": "2026-05-10",
-      "endDate": "2026-08-20"
+      "startDate": "2026-07-10",
+      "endDate": "2026-10-20"
     }
   },
   {
@@ -446,8 +446,8 @@
       "name": "Tower Foundation Batch TF-12",
       "workCenterId": "wc-8",
       "status": "in-progress",
-      "startDate": "2026-02-05",
-      "endDate": "2026-04-25"
+      "startDate": "2026-06-20",
+      "endDate": "2026-08-30"
     }
   },
   {
@@ -457,8 +457,8 @@
       "name": "Converter Platform Design",
       "workCenterId": "wc-8",
       "status": "open",
-      "startDate": "2026-03-15",
-      "endDate": "2026-07-10"
+      "startDate": "2026-09-05",
+      "endDate": "2026-12-15"
     }
   },
   {
@@ -469,7 +469,7 @@
       "workCenterId": "wc-1",
       "status": "in-progress",
       "startDate": "2026-01-10",
-      "endDate": "2026-03-20"
+      "endDate": "2026-02-28"
     }
   },
   {
@@ -479,7 +479,7 @@
       "name": "Network Switch NCS-5500",
       "workCenterId": "wc-1",
       "status": "open",
-      "startDate": "2026-02-15",
+      "startDate": "2026-03-01",
       "endDate": "2026-04-30"
     }
   },
@@ -490,8 +490,8 @@
       "name": "High-Voltage Switchgear HVS",
       "workCenterId": "wc-2",
       "status": "in-progress",
-      "startDate": "2026-02-01",
-      "endDate": "2026-04-10"
+      "startDate": "2026-04-01",
+      "endDate": "2026-04-30"
     }
   },
   {
@@ -502,7 +502,7 @@
       "workCenterId": "wc-2",
       "status": "blocked",
       "startDate": "2026-01-25",
-      "endDate": "2026-03-28"
+      "endDate": "2026-03-15"
     }
   }
 ]

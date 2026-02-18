@@ -25,7 +25,7 @@ export class TimelineHeaderComponent {
     { label: 'Month', value: 'month' }
   ];
 
-  selected = signal<'hour'|'day'|'week'|'month'>('month');
+  selected = signal<'hour'|'day'|'week'|'month'>(this.zoomService.zoomLevel());
   selectedDate = signal<any>(null);
   
   // ✅ Dropdown state
