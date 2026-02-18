@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="300" viewBox="0 0 1200 300">
+  <style>
+    .bg { fill: #ffffff; }
+    .grid { stroke: rgba(0,0,0,0.08); stroke-width:1; }
+    .row-label { font-family: Arial, sans-serif; font-size:12px; fill:#333; }
+    .bar-open { fill: #00BCD4; rx:6; }
+    .bar-inprogress { fill: #5B6FED; rx:6; }
+    .bar-complete { fill: #4CAF50; rx:6; }
+    .bar-blocked { fill: #FFA726; rx:6; }
+    .today-line { stroke: #237FFC; stroke-width:2; opacity:0.9; }
+    .title { font-family: Arial, sans-serif; font-size:16px; fill:#111; }
+  </style>
+
+  <rect class="bg" x="0" y="0" width="1200" height="300" />
+  <text x="16" y="24" class="title">Gantt Preview — Work Orders (sample)</text>
+
+  <!-- Vertical grid columns (months simplified) -->
+  <g transform="translate(200,40)">
+    <g>
+      <!-- 10 columns -->
+      <rect x="0" y="0" width="1000" height="220" fill="none" stroke="none"/>
+      <!-- column lines -->
+      <!-- draw 10 vertical grid lines -->
+      <g stroke="rgba(0,0,0,0.08)">
+        <line x1="0" y1="0" x2="0" y2="220"/>
+        <line x1="100" y1="0" x2="100" y2="220"/>
+        <line x1="200" y1="0" x2="200" y2="220"/>
+        <line x1="300" y1="0" x2="300" y2="220"/>
+        <line x1="400" y1="0" x2="400" y2="220"/>
+        <line x1="500" y1="0" x2="500" y2="220"/>
+        <line x1="600" y1="0" x2="600" y2="220"/>
+        <line x1="700" y1="0" x2="700" y2="220"/>
+        <line x1="800" y1="0" x2="800" y2="220"/>
+        <line x1="900" y1="0" x2="900" y2="220"/>
+      </g>
+
+      <!-- Rows labels -->
+      <g>
+        <text x="-180" y="20" class="row-label">Extrusion Line A</text>
+        <text x="-180" y="60" class="row-label">CNC Machine 1</text>
+        <text x="-180" y="100" class="row-label">Assembly Station</text>
+        <text x="-180" y="140" class="row-label">Quality Control</text>
+        <text x="-180" y="180" class="row-label">Packaging Line</text>
+      </g>
+
+      <!-- Example bars -->
+      <rect x="60" y="8" width="160" height="24" class="bar-inprogress" rx="6"/>
+      <rect x="240" y="48" width="120" height="24" class="bar-open" rx="6"/>
+      <rect x="180" y="88" width="200" height="24" class="bar-blocked" rx="6"/>
+      <rect x="120" y="128" width="80" height="24" class="bar-complete" rx="6"/>
+      <rect x="320" y="168" width="140" height="24" class="bar-open" rx="6"/>
+
+      <!-- Today indicator -->
+      <line x1="260" y1="0" x2="260" y2="220" class="today-line" />
+    </g>
+  </g>
+</svg>
