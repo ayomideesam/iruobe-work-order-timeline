@@ -7,3 +7,4 @@ export * from './date-filter.service';
 export * from './timeline-state.service';
 export * from './date-calculation.service';
 export * from './timeline-zoom.service';
+export * from './device-detection.service';
