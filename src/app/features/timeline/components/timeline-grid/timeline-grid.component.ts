@@ -1,6 +1,7 @@
 import { Component, inject, effect, signal, Input, ViewChild, ElementRef, Output, EventEmitter, ChangeDetectionStrategy, AfterViewInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WorkOrderService, WorkCenterService, TimelineZoomService } from 'src/app/core/services';
+import { ToastService } from 'src/app/core/services/toast.service';
 import { WorkOrderBarComponent } from '../work-order-bar/work-order-bar.component';
 import { CurrentDayIndicatorComponent } from '../current-day-indicator/current-day-indicator.component';
 import { WorkOrderDocument } from 'src/app/core/models';
@@ -34,6 +35,7 @@ export class TimelineGridComponent implements AfterViewInit {
   private woService = inject(WorkOrderService);
   private centerService = inject(WorkCenterService);
   private zoomService = inject(TimelineZoomService);
+  private toastService = inject(ToastService);
 
   orders = this.woService.orders;
   centers = this.centerService.centers;
@@ -718,6 +720,7 @@ export class TimelineGridComponent implements AfterViewInit {
   /** Handle delete event from work-order-bar */
   onDeleteOrder(order: WorkOrderDocument): void {
     this.woService.delete(order.docId);
+    this.toastService.success(`Work order "${order.data.name}" deleted successfully`);
   }
 
   /** Handle click on empty timeline area to create new work order */
