@@ -3,19 +3,21 @@ import { CommonModule } from '@angular/common';
 import { TimelineHeaderComponent } from '../timeline-header/timeline-header.component';
 import { TimelineGridComponent, PanelOpenEvent } from '../timeline-grid/timeline-grid.component';
 import { WorkOrderPanelComponent } from '../work-order-panel/work-order-panel.component';
+import { DeviceWarningComponent } from '../device-warning/device-warning.component';
 import { WorkOrderDocument } from 'src/app/core/models';
-import { InactivityService, TimelineZoomService } from 'src/app/core/services';
+import { DeviceDetectionService, InactivityService, TimelineZoomService } from 'src/app/core/services';
 
 @Component({
   selector: 'app-timeline-container',
   standalone: true,
-  imports: [CommonModule, TimelineHeaderComponent, TimelineGridComponent, WorkOrderPanelComponent],
+  imports: [CommonModule, TimelineHeaderComponent, TimelineGridComponent, WorkOrderPanelComponent, DeviceWarningComponent],
   templateUrl: './timeline-container.component.html',
   styleUrls: ['./timeline-container.component.scss']
 })
 export class TimelineContainerComponent implements OnDestroy {
   private readonly inactivity = inject(InactivityService);
   private readonly zoomService = inject(TimelineZoomService);
+  protected readonly deviceDetection = inject(DeviceDetectionService);
 
   @ViewChild('timelineGrid') timelineGrid!: TimelineGridComponent;
 
