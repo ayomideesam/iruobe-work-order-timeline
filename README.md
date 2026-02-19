@@ -38,9 +38,11 @@ This Angular 19 application provides an intuitive interface for manufacturing pl
 - ✅ **Today Button** — Scrolls the timeline horizontally to center on today's date
 - ✅ **Tooltips on Hover** — Full work order name, start/end dates, and status shown via ngb-tooltip on bar hover
 - ✅ **Toast Notifications** — Auto-dismissing success/error toast system for create, update, and delete actions
-- ✅ **Landing Page** — Splash screen with "Proceed to Dashboard" CTA before entering the timeline
+- ✅ **Landing Page** — Centered splash screen with "Proceed to Dashboard" CTA before entering the timeline
 - ✅ **Inactivity Detection** — Auto-saves state and warns user after period of inactivity
 - ✅ **Zoom State Reset on Navigation** — Timescale automatically resets to Month when leaving and returning to the dashboard, keeping grid and header in sync
+- ✅ **Responsive Device Detection** — Detects device type and shows contextual warnings for unsupported screen sizes (phones <768px); timeline optimized for tablets and desktops
+- ✅ **Netlify Deployment** — Production build deployed via Netlify with SPA redirect support
 
 ## Technology Stack
 
@@ -50,6 +52,7 @@ This Angular 19 application provides an intuitive interface for manufacturing pl
 | TypeScript | 5.7.2 | Strict-mode type safety |
 | SCSS | — | Component & global styles with CSS custom properties |
 | Bootstrap | 5.3.8 | CSS utility foundation |
+| Angular CDK | 19.2.18 | BreakpointObserver for responsive device detection |
 | ng-select | 14.9.0 | Status and zoom level dropdowns |
 | ng-bootstrap | 18.0.0 | Datepicker (ngb-datepicker) and tooltips (ngb-tooltip) |
 | date-fns | 4.1.0 | Date arithmetic and formatting |
@@ -75,7 +78,8 @@ src/app/
 │       ├── overlap-detection.service.ts # Conflict detection
 │       ├── timeline-state.service.ts    # Shared signal state
 │       ├── toast.service.ts             # Notification stream
-│       └── inactivity.service.ts        # Idle detection
+│       ├── inactivity.service.ts        # Idle detection
+│       └── device-detection.service.ts  # Responsive device/breakpoint detection
 │
 ├── features/timeline/components/
 │   ├── timeline-container/     # Parent orchestrator (panel state, signal coordination)
@@ -88,7 +92,8 @@ src/app/
 │   ├── current-day-indicator/  # Blue vertical today line
 │   ├── date-column-header/     # Column header labels
 │   ├── work-center-selector/   # Filter work centers
-│   └── three-dot-menu/         # Edit / Delete actions dropdown
+│   ├── three-dot-menu/         # Edit / Delete actions dropdown
+│   └── device-warning/         # Responsive device warning banner
 │
 ├── shared/
 │   ├── components/status-badge/   # Reusable status pill
@@ -98,6 +103,33 @@ src/app/
 ├── app.component.ts
 └── app.config.ts
 ```
+
+---
+
+## Responsive Design
+
+The timeline is optimized for tablets (768px+) and desktops. A `DeviceDetectionService` powered by Angular CDK's `BreakpointObserver` evaluates the viewport in real time:
+
+| Device Class | Width | Experience |
+|-------------|-------|------------|
+| Small phones | < 576px | **Unsupported** — red warning banner |
+| Large phones | 576px – 767px | **Degraded** — yellow warning banner |
+| Tablets | 768px – 1024px | **Supported** — full timeline |
+| Desktops | > 1024px | **Fully optimized** — full timeline |
+
+Device warnings appear on both the landing page and the dashboard. The layout is fluid with `max-width: 1440px` and auto-centers on all viewports.
+
+---
+
+## Deployment
+
+The app is deployed on **Netlify** using the `prod` branch.
+
+- **Live URL**: *(configured via Netlify dashboard)*
+- **Branch**: `prod`
+- **Build command**: `npm run build`
+- **Publish directory**: `dist/iruobe-work-order-timeline/browser`
+- **SPA routing**: Handled via `netlify.toml` redirect rules
 
 ---
 
@@ -299,8 +331,11 @@ npm test -- --watch=false --browsers=ChromeHeadless
 - ✅ Today button
 - ✅ Tooltips on hover
 - ✅ Toast notifications
-- ✅ Landing page
-- ✅ Clean git history with 12 logical commits (Feb 15–18, 2026)
+- ✅ Landing page (centered on all devices)
+- ✅ Responsive device detection with user-facing warnings
+- ✅ Netlify deployment (prod branch)
+- ✅ Clean git history with conventional commits (Feb 15–19, 2026)
 - ✅ README documentation complete
+- ✅ 0 npm vulnerabilities
 - [ ] Loom demo video (5–10 min) — pending
 
