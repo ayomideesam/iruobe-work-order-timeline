@@ -2,7 +2,7 @@
 [build]
   command = "ng build --configuration=production"
   functions = "netlify/functions"
-  publish = "dist/iruobe-work-order-timeline"
+  publish = "dist/iruobe-work-order-timeline/browser"
 
   ## Uncomment to use this redirect for Single Page Applications like create-react-app.
   ## Not needed for static site generators.
