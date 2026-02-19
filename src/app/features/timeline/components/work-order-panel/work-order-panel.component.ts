@@ -16,6 +16,7 @@ import {
 } from '@ng-bootstrap/ng-bootstrap';
 import { WorkOrderDocument, WorkOrderStatus } from 'src/app/core/models';
 import { WorkOrderService } from 'src/app/core/services/work-order.service';
+import { ToastService } from 'src/app/core/services/toast.service';
 
 /**
  * Custom formatter — displays dates as MM.DD.YYYY
@@ -69,6 +70,7 @@ export class WorkOrderPanelComponent implements OnChanges, OnInit {
 
   private fb        = inject(FormBuilder);
   private woService = inject(WorkOrderService);
+  private toastService = inject(ToastService);
 
   form!: FormGroup;
   errorMessage = '';
@@ -224,7 +226,14 @@ export class WorkOrderPanelComponent implements OnChanges, OnInit {
       return;
     }
 
-    this.mode === 'create' ? this.woService.create(candidate) : this.woService.update(candidate);
+    if (this.mode === 'create') {
+      this.woService.create(candidate);
+      this.toastService.success(`Work order "${candidate.data.name}" created successfully`);
+    } else {
+      this.woService.update(candidate);
+      this.toastService.success(`Work order "${candidate.data.name}" updated successfully`);
+    }
+    
     this.close.emit();
   }
 
