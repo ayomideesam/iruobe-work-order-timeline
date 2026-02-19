@@ -1,11 +1,11 @@
-import { Component, inject, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject, Input, ChangeDetectionStrategy, OnInit, OnChanges, SimpleChanges, signal } from '@angular/core';
 import { TimelineZoomService } from 'src/app/core/services';
 
 @Component({
   selector: 'app-current-day-indicator',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="current-day-line" [style.left.px]="leftOffset" aria-hidden="true"></div>
   `,
@@ -27,13 +27,36 @@ import { TimelineZoomService } from 'src/app/core/services';
     }
   `]
 })
-export class CurrentDayIndicatorComponent {
+export class CurrentDayIndicatorComponent implements OnChanges {
   @Input() gridStartDate!: Date;
   private zoomService = inject(TimelineZoomService);
 
+  /** Cached offset — recalculated only when gridStartDate or zoom changes */
+  cachedLeftOffset = 0;
+  /** Track last zoom to detect zoom changes in getter */
+  private _lastZoom = '';
+
+  ngOnChanges(_changes: SimpleChanges): void {
+    this._lastZoom = this.zoomService.zoomLevel();
+    this._recalculate();
+  }
+
   get leftOffset(): number {
-    if (!this.gridStartDate) return 0;
+    // Read zoom signal for OnPush reactivity; recalculate when zoom changes
+    const zoom = this.zoomService.zoomLevel();
+    if (zoom !== this._lastZoom) {
+      this._lastZoom = zoom;
+      this._recalculate();
+    }
+    return this.cachedLeftOffset;
+  }
+
+  private _recalculate(): void {
+    if (!this.gridStartDate) {
+      this.cachedLeftOffset = 0;
+      return;
+    }
     const today = new Date();
-    return this.zoomService.getDateOffset(today, this.gridStartDate, []);
+    this.cachedLeftOffset = this.zoomService.getDateOffset(today, this.gridStartDate, []);
   }
 }

@@ -1,5 +1,4 @@
-import { Component, computed, signal, inject, Output, EventEmitter } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, computed, signal, inject, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
@@ -8,9 +7,10 @@ import { DateFilterService, TimelineZoomService } from 'src/app/core/services';
 @Component({
   selector: 'app-timeline-header',
   standalone: true,
-  imports: [CommonModule, FormsModule, NgSelectModule, NgbDatepickerModule],
+  imports: [FormsModule, NgSelectModule, NgbDatepickerModule],
   templateUrl: './timeline-header.component.html',
-  styleUrls: ['./timeline-header.component.scss']
+  styleUrls: ['./timeline-header.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TimelineHeaderComponent {
   private zoomService = inject(TimelineZoomService);

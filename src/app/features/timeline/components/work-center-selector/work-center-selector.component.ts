@@ -1,13 +1,13 @@
-import { Component, computed, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, computed, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { WorkCenterService } from 'src/app/core/services';
 
 @Component({
   selector: 'app-work-center-selector',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './work-center-selector.component.html',
-  styleUrls: ['./work-center-selector.component.scss']
+  styleUrls: ['./work-center-selector.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WorkCenterSelectorComponent {
   private workCenterService = inject(WorkCenterService);
