@@ -116,8 +116,8 @@
       "name": "Smart Thermostat v3.2",
       "workCenterId": "wc-1",
       "status": "complete",
-      "startDate": "2026-05-01",
-      "endDate": "2026-05-30"
+      "startDate": "2026-05-04",
+      "endDate": "2026-06-17"
     }
   },
   {
@@ -468,8 +468,8 @@
       "name": "5G Base Station Batch BS-900",
       "workCenterId": "wc-1",
       "status": "in-progress",
-      "startDate": "2026-01-10",
-      "endDate": "2026-02-28"
+      "startDate": "2025-11-10",
+      "endDate": "2025-09-28"
     }
   },
   {
