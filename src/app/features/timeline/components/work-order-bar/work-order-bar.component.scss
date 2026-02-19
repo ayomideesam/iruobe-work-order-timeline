@@ -41,7 +41,7 @@
 }
 
 .work-order-name {
-  font-family: CircularStd-Book, 'Circular Std', sans-serif;
+  font-family: var(--type-circular-book);
   font-size: 14px;
   font-weight: 400;
   color: rgba(3, 9, 41, 1);
@@ -88,7 +88,7 @@
 }
 
 .status-text {
-  font-family: CircularStd-Book, 'Circular Std', sans-serif;
+  font-family: var(--type-circular-book);
   font-size: 14px;
   font-weight: 400;
   width: 100%;

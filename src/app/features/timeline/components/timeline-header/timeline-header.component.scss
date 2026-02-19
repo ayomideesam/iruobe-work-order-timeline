@@ -45,7 +45,7 @@
 
 h2 {
     margin: 0;
-    font-family: var(--type-heading);
+    font-family: var(--type-circular-medium);
     font-size: 32px;
     font-weight: 600;
     color: #0b1330;
@@ -108,7 +108,7 @@ h2 {
     justify-content: center;
     letter-spacing: auto;
     line-height: 16px;
-    font-family: CircularStd-Book;
+    font-family: var(--type-circular-book);
     font-size: 13px;
     font-weight: 400;
     color: rgba(104, 113, 150, 1);
@@ -120,7 +120,7 @@ h2 {
     height: 25px;
     font-size: 13px;
     font-weight: 500;
-    font-family: CircularStd-Medium;
+    font-family: var(--type-circular-medium);
     color: rgba(62, 64, 219, 1);
     cursor: pointer;
 }
@@ -150,6 +150,7 @@ h2 {
 
 .timescale-select ::ng-deep .ng-placeholder,
 .timescale-select ::ng-deep .ng-value-label {
+    font-family: var(--type-circular-medium);
     font-size: 13px;
     font-weight: 500;
     color: rgba(62, 64, 219, 1);
@@ -251,7 +252,7 @@ h2 {
     color: #ffffff;
     border: none;
     border-radius: 5px;
-    font-family: CircularStd-Medium;
+    font-family: var(--type-circular-medium);
     font-size: 13px;
     font-weight: 500;
     cursor: pointer;
