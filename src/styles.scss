@@ -33,8 +33,9 @@ body { margin: 0; }
 
 app-root {
   display: block;
-  width: 1440px;
-  height: 1024px;
+  width: 100%;
+  max-width: 1440px;
+  min-height: 100vh;
   background: rgba(255, 255, 255, 1);
   margin: 0 auto;
 }

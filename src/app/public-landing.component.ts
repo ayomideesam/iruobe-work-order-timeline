@@ -1,12 +1,14 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { DeviceWarningComponent } from './features/timeline/components/device-warning/device-warning.component';
 
 @Component({
   selector: 'app-public-landing',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, DeviceWarningComponent],
   template: `
+    <app-device-warning></app-device-warning>
     <div class="landing">
       <div class="content">
         <div class="card">
@@ -29,15 +31,16 @@ import { Router } from '@angular/router';
   `,
   styles: [`
     :host {
-      display: block;
+      display: flex;
+      flex-direction: column;
       width: 100%;
-      height: 100vh;
-      overflow: hidden; /* Prevent scroll */
+      min-height: 100vh;
+      overflow-x: hidden;
     }
 
     .landing {
       width: 100%;
-      height: 100vh;
+      flex: 1;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -62,6 +65,7 @@ import { Router } from '@angular/router';
       border-radius: var(--panel-radius);
       box-shadow: var(--card-shadow);
       text-align: center;
+      box-sizing: border-box;
     }
 
     .title {
@@ -70,6 +74,8 @@ import { Router } from '@angular/router';
       font-size: 18px;
       margin: 0 0 6px 0;
       color: #1f2933;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
     }
 
     .subtitle {
@@ -77,6 +83,8 @@ import { Router } from '@angular/router';
       color: var(--muted);
       font-size: 13px;
       letter-spacing: 0.2px;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
     }
 
     .actions {

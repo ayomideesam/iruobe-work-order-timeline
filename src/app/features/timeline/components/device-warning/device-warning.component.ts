@@ -36,9 +36,7 @@ import { DeviceDetectionService } from 'src/app/core/services/device-detection.s
                 }
               </strong>
               <p>{{ deviceDetection.warningMessage() }}</p>
-            </div>
-            <div class="device-info">
-              <small>Current device: {{ deviceDetection.deviceType() | titlecase }}</small>
+              <small class="device-info-inline">Current device: {{ deviceDetection.deviceType() | titlecase }}</small>
             </div>
           </div>
         </div>
@@ -50,7 +48,8 @@ import { DeviceDetectionService } from 'src/app/core/services/device-detection.s
       position: sticky;
       top: 0;
       z-index: 1000;
-      background: white;
+      width: 100%;
+      box-sizing: border-box;
       padding: 12px 16px;
       border-bottom: 1px solid #e0e0e0;
     }
@@ -59,9 +58,9 @@ import { DeviceDetectionService } from 'src/app/core/services/device-detection.s
       margin: 0;
       padding: 12px 16px;
       border-radius: 6px;
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
+      overflow: visible;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
     }
 
     .alert-danger {
@@ -80,7 +79,6 @@ import { DeviceDetectionService } from 'src/app/core/services/device-detection.s
       display: flex;
       align-items: flex-start;
       gap: 12px;
-      flex: 1;
       width: 100%;
     }
 
@@ -98,6 +96,9 @@ import { DeviceDetectionService } from 'src/app/core/services/device-detection.s
 
     .warning-text {
       flex: 1;
+      min-width: 0;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
     }
 
     .warning-text strong {
@@ -108,41 +109,39 @@ import { DeviceDetectionService } from 'src/app/core/services/device-detection.s
     }
 
     .warning-text p {
-      margin: 0;
+      margin: 0 0 4px 0;
       font-size: 13px;
       line-height: 1.4;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
     }
 
-    .device-info {
-      flex-shrink: 0;
-      text-align: right;
-    }
-
-    .device-info small {
+    .device-info-inline {
       display: block;
       font-size: 11px;
-      opacity: 0.8;
-      margin-top: 4px;
+      opacity: 0.7;
+      margin-top: 2px;
     }
 
     @media (max-width: 576px) {
       .device-warning-container {
-        padding: 8px 12px;
+        padding: 8px 10px;
       }
 
       .alert {
-        padding: 8px 12px;
-        gap: 8px;
+        padding: 10px 12px;
       }
 
       .warning-content {
-        flex-direction: column;
         gap: 8px;
       }
 
-      .device-info {
-        text-align: left;
-        margin-top: 4px;
+      .warning-text strong {
+        font-size: 13px;
+      }
+
+      .warning-text p {
+        font-size: 12px;
       }
     }
   `]

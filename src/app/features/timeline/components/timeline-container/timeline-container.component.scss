@@ -4,8 +4,9 @@
   gap: 0;
   padding: 0;
   background: rgba(255, 255, 255, 1);
-  width: 1440px;
-  height: 1024px;
+  width: 100%;
+  max-width: 1440px;
+  min-height: 100vh;
 }
 
 .panel {
@@ -21,4 +22,5 @@
 .content-area {
   flex: 1;
   overflow: hidden;
-}.content-area { min-height: 820px; display:block }
+}
+.content-area { min-height: 0; display: block; overflow-x: auto; }
