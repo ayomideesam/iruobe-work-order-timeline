@@ -1,4 +1,4 @@
-<div class="work-order-bar" [ngClass]="'status-' + order.data.status" 
+<div class="work-order-bar" [class]="'status-' + order.data.status" 
      [ngbTooltip]="getTooltipText()" 
      [placement]="['top', 'bottom', 'start', 'end']"
      container="body"
@@ -12,12 +12,13 @@
     <span class="dot"></span>
     <span class="dot"></span>
   </button>
-  <div class="dropdown-menu" 
-       *ngIf="isMenuOpen" 
-       [style.top.px]="dropdownTop"
-       [style.left.px]="dropdownLeft"
-       (click)="$event.stopPropagation()">
-    <button class="menu-item edit-item" (click)="onEdit()">Edit</button>
-    <button class="menu-item delete-item" (click)="onDelete()">Delete</button>
-  </div>
+  @if (isMenuOpen) {
+    <div class="dropdown-menu"
+         [style.top.px]="dropdownTop"
+         [style.left.px]="dropdownLeft"
+         (click)="$event.stopPropagation()">
+      <button class="menu-item edit-item" (click)="onEdit()">Edit</button>
+      <button class="menu-item delete-item" (click)="onDelete()">Delete</button>
+    </div>
+  }
 </div>

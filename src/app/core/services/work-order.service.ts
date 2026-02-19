@@ -9,15 +9,17 @@ const STORAGE_HASH_KEY = 'naologic_work_orders_hash';
  * Generate a simple hash from demo data to auto-detect changes.
  * Whenever demo-100-workorders.json is modified, this hash changes
  * and cached localStorage data is automatically invalidated.
+ * Uses lightweight fields only — no JSON.stringify of full dataset.
  */
 function computeDemoDataHash(): string {
   const demoData = DEMO_WORK_ORDERS as WorkOrderDocument[];
-  // Create a fingerprint: count + first/last docIds + total characters
   const count = demoData.length;
   const firstId = demoData[0]?.docId || '';
   const lastId = demoData[count - 1]?.docId || '';
-  const jsonLength = JSON.stringify(demoData).length;
-  return `v3-${count}-${firstId}-${lastId}-${jsonLength}`;
+  // Use first + last order dates as part of the fingerprint (avoids stringifying full array)
+  const firstDate = demoData[0]?.data?.startDate || '';
+  const lastDate = demoData[count - 1]?.data?.endDate || '';
+  return `v4-${count}-${firstId}-${lastId}-${firstDate}-${lastDate}`;
 }
 
 @Injectable({ providedIn: 'root' })

@@ -1,5 +1,4 @@
-import { Component, inject, effect, signal, Input, ViewChild, ElementRef, Output, EventEmitter, ChangeDetectionStrategy, AfterViewInit, HostListener } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject, effect, signal, Input, ViewChild, ElementRef, Output, EventEmitter, ChangeDetectionStrategy, AfterViewInit, NgZone } from '@angular/core';
 import { WorkOrderService, WorkCenterService, TimelineZoomService } from 'src/app/core/services';
 import { ToastService } from 'src/app/core/services/toast.service';
 import { WorkOrderBarComponent } from '../work-order-bar/work-order-bar.component';
@@ -26,7 +25,7 @@ export interface PanelOpenEvent {
 @Component({
   selector: 'app-timeline-grid',
   standalone: true,
-  imports: [CommonModule, WorkOrderBarComponent, CurrentDayIndicatorComponent],
+  imports: [WorkOrderBarComponent, CurrentDayIndicatorComponent],
   templateUrl: './timeline-grid.component.html',
   styleUrls: ['./timeline-grid.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -36,6 +35,7 @@ export class TimelineGridComponent implements AfterViewInit {
   private centerService = inject(WorkCenterService);
   private zoomService = inject(TimelineZoomService);
   private toastService = inject(ToastService);
+  private ngZone = inject(NgZone);
 
   orders = this.woService.orders;
   centers = this.centerService.centers;
@@ -66,44 +66,62 @@ export class TimelineGridComponent implements AfterViewInit {
   cachedWorkCenters: { id: string; name: string }[] = [];
   cachedOrdersByCenter: Map<string, WorkOrderDocument[]> = new Map();
 
+  /** Pre-computed bar positions: Map<docId, {left, width}> — avoids per-CD recalculation */
+  cachedBarPositions: Map<string, { left: number; width: number }> = new Map();
+
+  /** Cached selected column index — avoids repeated findIndex calls in template */
+  cachedSelectedColumnIndex = -1;
+
+  /** Cached zoom label for the selected column badge */
+  currentLabel = 'Current month';
+
   // Keyboard navigation state
   focusedOrderId = signal<string | null>(null);
   private allOrdersFlat: WorkOrderDocument[] = [];
 
-  /** Keyboard navigation handler */
-  @HostListener('document:keydown', ['$event'])
-  onKeyDown(event: KeyboardEvent): void {
+  /** Keyboard listener handle for cleanup */
+  private _keydownListener: ((e: KeyboardEvent) => void) | null = null;
+
+  /** Keyboard navigation handler — runs outside NgZone to avoid per-keypress CD */
+  private _handleKeyDown(event: KeyboardEvent): void {
     // Skip if user is typing in an input
     if (this._isInputFocused()) return;
 
+    let handled = false;
     switch (event.key) {
       case 'ArrowDown':
         event.preventDefault();
-        this._navigateOrders(1);
+        handled = true;
+        this.ngZone.run(() => this._navigateOrders(1));
         break;
       case 'ArrowUp':
         event.preventDefault();
-        this._navigateOrders(-1);
+        handled = true;
+        this.ngZone.run(() => this._navigateOrders(-1));
         break;
       case 'ArrowRight':
         event.preventDefault();
-        this._navigateColumns(1);
+        handled = true;
+        this.ngZone.run(() => this._navigateColumns(1));
         break;
       case 'ArrowLeft':
         event.preventDefault();
-        this._navigateColumns(-1);
+        handled = true;
+        this.ngZone.run(() => this._navigateColumns(-1));
         break;
       case 'Enter':
-        this._openFocusedOrder();
+        handled = true;
+        this.ngZone.run(() => this._openFocusedOrder());
         break;
       case 'Escape':
-        this._clearFocus();
+        handled = true;
+        this.ngZone.run(() => this._clearFocus());
         break;
       case 't':
       case 'T':
-        // Quick shortcut: T for Today
         if (!event.ctrlKey && !event.metaKey) {
-          this.scrollToToday();
+          handled = true;
+          this.ngZone.run(() => this.scrollToToday());
         }
         break;
     }
@@ -208,6 +226,12 @@ export class TimelineGridComponent implements AfterViewInit {
   }
 
   constructor() {
+    // Register keydown listener outside NgZone — only enters zone when state changes
+    this.ngZone.runOutsideAngular(() => {
+      this._keydownListener = (e: KeyboardEvent) => this._handleKeyDown(e);
+      document.addEventListener('keydown', this._keydownListener);
+    });
+
     effect(() => {
       // Track zoom level changes
       const currentZoom = this.zoomLevel();
@@ -223,22 +247,37 @@ export class TimelineGridComponent implements AfterViewInit {
       this._recalculateGrid();
       this._cacheWorkCenters();
       this._cacheOrdersByCenter();
+      this._cacheBarPositions();
+      this._cacheSelectedColIndex();
+      this._updateCurrentLabel();
 
       // Scroll to today after grid is ready (or after zoom change)
       if (!this.hasScrolledToToday && this.dateColumns.length > 0) {
-        // Use setTimeout to ensure DOM is updated before scrolling
-        setTimeout(() => this._scrollToToday(), 50);
+        // Use setTimeout outside NgZone to avoid triggering extra CD for scroll positioning
+        this.ngZone.runOutsideAngular(() => {
+          setTimeout(() => this._scrollToToday(), 50);
+        });
       }
     });
   }
 
   ngAfterViewInit(): void {
-    // Ensure scroll to today on initial load
-    setTimeout(() => {
-      if (!this.hasScrolledToToday && this.dateColumns.length > 0) {
-        this._scrollToToday();
-      }
-    }, 100);
+    // Ensure scroll to today on initial load — outside NgZone to avoid extra CD
+    this.ngZone.runOutsideAngular(() => {
+      setTimeout(() => {
+        if (!this.hasScrolledToToday && this.dateColumns.length > 0) {
+          this._scrollToToday();
+        }
+      }, 100);
+    });
+  }
+
+  /** Clean up keydown listener */
+  ngOnDestroy(): void {
+    if (this._keydownListener) {
+      document.removeEventListener('keydown', this._keydownListener);
+      this._keydownListener = null;
+    }
   }
 
   /** Public method: Scroll the grid to center on today's date */
@@ -422,43 +461,41 @@ export class TimelineGridComponent implements AfterViewInit {
     }
   }
 
-  /** Calculate left offset for a work order within a column */
-  getOrderLeftOffset(order: WorkOrderDocument, dateColumn: DateColumn): string {
-    const orderStart = new Date(order.data.startDate);
-    const columnStart = dateColumn.date;
-
-    if (orderStart >= columnStart) {
-      // Order starts in this column
-      return '0px';
-    } else {
-      // Order started before this column
-      return '0px';
+  /** Pre-compute all bar positions into a Map for O(1) template lookups */
+  private _cacheBarPositions(): void {
+    this.cachedBarPositions.clear();
+    for (const [_centerId, orders] of this.cachedOrdersByCenter) {
+      for (const order of orders) {
+        const left = this.getOrderLeftPosition(order);
+        const width = this.getOrderWidthPx(order);
+        this.cachedBarPositions.set(order.docId, { left, width });
+      }
     }
   }
 
-  /** Calculate width of work order within its columns */
-  getOrderWidth(order: WorkOrderDocument): string {
-    const startDate = new Date(order.data.startDate);
-    const endDate = new Date(order.data.endDate);
-    const zoom = this.zoomLevel();
-
-    const daysDiff = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
-    let width: number;
-
-    if (zoom === 'day') {
-      width = Math.max(105, daysDiff * 105);
-    } else if (zoom === 'week') {
-      const weeksDiff = Math.ceil(daysDiff / 7);
-      width = Math.max(140, weeksDiff * 140);
-    } else {
-      const monthsDiff = Math.ceil(daysDiff / 30);
-      width = Math.max(180, monthsDiff * 180);
+  /** Cache selected column index to avoid repeated findIndex in template */
+  private _cacheSelectedColIndex(): void {
+    const selected = this.selectedDateColumn();
+    if (!selected) {
+      this.cachedSelectedColumnIndex = -1;
+      return;
     }
-
-    return `${width}px`;
+    this.cachedSelectedColumnIndex = this.dateColumns.findIndex(
+      c => c.date.getTime() === selected.date.getTime()
+    );
   }
 
-  /** Get all orders for a work center (returns cached array — stable reference) */
+  /** Fast lookup for bar left position (returns cached value) */
+  getCachedBarLeft(order: WorkOrderDocument): number {
+    return this.cachedBarPositions.get(order.docId)?.left ?? 0;
+  }
+
+  /** Fast lookup for bar width (returns cached value) */
+  getCachedBarWidth(order: WorkOrderDocument): number {
+    return this.cachedBarPositions.get(order.docId)?.width ?? 0;
+  }
+
+  /** Calculate left pixel position for a work order relative to the grid start */
   getOrdersForCenter(centerId: string): WorkOrderDocument[] {
     return this.cachedOrdersByCenter.get(centerId) || [];
   }
@@ -575,8 +612,14 @@ export class TimelineGridComponent implements AfterViewInit {
     const current = this.selectedDateColumn();
     const isCurrentlySelected = current !== null && current.date.getTime() === column.date.getTime();
     this.selectedDateColumn.set(isCurrentlySelected ? null : column);
-    // Recache orders since selection affects filtering
+    // Recache orders and positions since selection affects filtering
     this._cacheOrdersByCenter();
+    this._cacheBarPositions();
+    this._cacheSelectedColIndex();
+    // Defer position cache until DOM updates (setTimeout 0 outside NgZone)
+    this.ngZone.runOutsideAngular(() => {
+      setTimeout(() => this._cacheSelectedColumnPosition(), 0);
+    });
   }
 
   /** Check if a column is selected */
@@ -585,77 +628,21 @@ export class TimelineGridComponent implements AfterViewInit {
     return selected !== null && selected.date.getTime() === column.date.getTime();
   }
 
-  /** Get the index of the currently selected column (-1 if none) */
+  /** Get the index of the currently selected column (-1 if none) — cached */
   get selectedColumnIndex(): number {
-    const selected = this.selectedDateColumn();
-    if (!selected) return -1;
-    return this.dateColumns.findIndex(c => c.date.getTime() === selected.date.getTime());
+    return this.cachedSelectedColumnIndex;
   }
 
-  /** Get the current label for selected column */
-  getCurrentLabel(): string {
+  /** Update cached currentLabel based on zoom level */
+  private _updateCurrentLabel(): void {
     const zoom = this.zoomLevel();
     if (zoom === 'day') {
-      return 'Current day';
+      this.currentLabel = 'Current day';
     } else if (zoom === 'week') {
-      return 'Current week';
+      this.currentLabel = 'Current week';
     } else {
-      return 'Current month';
+      this.currentLabel = 'Current month';
     }
-  }
-
-  /** Get work orders for a specific center and column, filtered by selection */
-  getOrdersForCenterAndDate(centerId: string, dateColumn: DateColumn): WorkOrderDocument[] {
-    const selectedColumn = this.selectedDateColumn();
-
-    // If a column is selected, only show orders from that column
-    if (selectedColumn !== null) {
-      const columnToCheck = selectedColumn;
-      const columnStart = columnToCheck.date;
-      const columnEnd = new Date(columnStart);
-
-      // Extend column end based on zoom
-      if (this.zoomLevel() === 'day') {
-        columnEnd.setDate(columnEnd.getDate() + 1);
-      } else if (this.zoomLevel() === 'week') {
-        columnEnd.setDate(columnEnd.getDate() + 7);
-      } else {
-        columnEnd.setMonth(columnEnd.getMonth() + 1);
-      }
-
-      return this.orders().filter(o => {
-        const orderStart = new Date(o.data.startDate);
-        const orderEnd = new Date(o.data.endDate);
-
-        // Work order overlaps with the selected date column
-        return o.data.workCenterId === centerId &&
-          orderStart < columnEnd &&
-          orderEnd >= columnStart;
-      });
-    }
-
-    // No selection - show all orders for this column
-    const columnStart = dateColumn.date;
-    const columnEnd = new Date(columnStart);
-
-    // Extend column end based on zoom
-    if (this.zoomLevel() === 'day') {
-      columnEnd.setDate(columnEnd.getDate() + 1);
-    } else if (this.zoomLevel() === 'week') {
-      columnEnd.setDate(columnEnd.getDate() + 7);
-    } else {
-      columnEnd.setMonth(columnEnd.getMonth() + 1);
-    }
-
-    return this.orders().filter(o => {
-      const orderStart = new Date(o.data.startDate);
-      const orderEnd = new Date(o.data.endDate);
-
-      // Work order overlaps with this date column
-      return o.data.workCenterId === centerId &&
-        orderStart < columnEnd &&
-        orderEnd >= columnStart;
-    });
   }
 
   /** Track horizontal scroll of the right panel */
@@ -678,35 +665,39 @@ export class TimelineGridComponent implements AfterViewInit {
     this.hoverRowId.set(null);
   }
 
-  /** Calculate the center position of the selected column (CSS translateX(-50%) handles centering) */
-  getSelectedColumnPosition(): number {
-    const selected = this.selectedDateColumn();
-    if (!selected) return 0;
+  /** Cached selected column badge position — updated only on selection change */
+  cachedSelectedColumnPosition = 0;
 
-    // Find the index of the selected column
-    const columnIndex = this.dateColumns.findIndex(
-      col => col.date.getTime() === selected.date.getTime()
-    );
+  /** Calculate & cache the center position of the selected column */
+  private _cacheSelectedColumnPosition(): void {
+    const idx = this.cachedSelectedColumnIndex;
+    if (idx === -1) {
+      this.cachedSelectedColumnPosition = 0;
+      return;
+    }
 
-    if (columnIndex === -1) return 0;
-
-    // Try to read from the actual DOM for pixel-perfect centering
+    // Try pixel-perfect from DOM
     const panelEl = this.rightPanelEl?.nativeElement;
     if (panelEl) {
       const columnElements = panelEl.querySelectorAll('.date-column-header');
-      const selectedEl = columnElements[columnIndex] as HTMLElement;
+      const selectedEl = columnElements[idx] as HTMLElement;
       if (selectedEl) {
-        // Return column center — CSS transform: translateX(-50%) handles badge centering
-        return selectedEl.offsetLeft + (selectedEl.offsetWidth / 2);
+        this.cachedSelectedColumnPosition = selectedEl.offsetLeft + (selectedEl.offsetWidth / 2);
+        return;
       }
     }
 
     // Fallback: calculate from column data
     const leftOffset = this.dateColumns
-      .slice(0, columnIndex)
+      .slice(0, idx)
       .reduce((sum, col) => sum + col.width, 0);
 
-    return leftOffset + (this.dateColumns[columnIndex].width / 2);
+    this.cachedSelectedColumnPosition = leftOffset + (this.dateColumns[idx].width / 2);
+  }
+
+  /** Return cached selected column position (called from template) */
+  getSelectedColumnPosition(): number {
+    return this.cachedSelectedColumnPosition;
   }
 
   /** Handle edit event from work-order-bar */
@@ -779,16 +770,4 @@ export class TimelineGridComponent implements AfterViewInit {
     return this.dateColumns.length > 0 ? new Date(this.dateColumns[this.dateColumns.length - 1].date) : new Date();
   }
 
-  // ── trackBy functions to preserve DOM identity ──
-  trackByCenter(_index: number, center: { id: string; name: string }): string {
-    return center.id;
-  }
-
-  trackByOrder(_index: number, order: WorkOrderDocument): string {
-    return order.docId;
-  }
-
-  trackByColumn(_index: number, col: DateColumn): number {
-    return col.date.getTime();
-  }
 }

@@ -4,12 +4,13 @@
   </div>
 
   <div class="selector-list">
-    <button
-      *ngFor="let center of workCenters()"
-      [class.selected]="isSelected(center.docId)"
-      (click)="selectWorkCenter(center.docId)"
-      class="center-item">
-      <span class="center-name">{{ center.data.name }}</span>
-    </button>
+    @for (center of workCenters(); track center.docId) {
+      <button
+        [class.selected]="isSelected(center.docId)"
+        (click)="selectWorkCenter(center.docId)"
+        class="center-item">
+        <span class="center-name">{{ center.data.name }}</span>
+      </button>
+    }
   </div>
 </div>

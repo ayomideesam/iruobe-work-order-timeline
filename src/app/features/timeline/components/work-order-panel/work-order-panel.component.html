@@ -1,6 +1,8 @@
 <!-- Iruobe Work Order Panel -->
 
-<div class="panel-backdrop" *ngIf="isOpen" (click)="onBackdropClick()"></div>
+@if (isOpen) {
+  <div class="panel-backdrop" (click)="onBackdropClick()"></div>
+}
 
 <aside class="work-order-panel" [class.open]="isOpen">
 
@@ -19,16 +21,19 @@
 
   <div class="header-divider"></div>
 
-  <div class="error-banner" *ngIf="errorMessage">
-    <svg class="error-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
-      <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
-      <path d="M8 4.5v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-      <circle cx="8" cy="11" r="0.75" fill="currentColor"/>
-    </svg>
-    <span class="error-text">{{ errorMessage }}</span>
-  </div>
+  @if (errorMessage) {
+    <div class="error-banner">
+      <svg class="error-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M8 4.5v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="8" cy="11" r="0.75" fill="currentColor"/>
+      </svg>
+      <span class="error-text">{{ errorMessage }}</span>
+    </div>
+  }
 
-  <form class="panel-content" [formGroup]="form" *ngIf="form" (ngSubmit)="onSubmit()">
+  @if (form) {
+    <form class="panel-content" [formGroup]="form" (ngSubmit)="onSubmit()">
 
     <!-- Work Order Name -->
     <div class="form-group">
@@ -40,10 +45,11 @@
         formControlName="name"
         [class.field-error]="form.get('name')?.invalid && form.get('name')?.touched"
         [placeholder]="mode === 'create' ? 'Acme Inc.' : ''" />
-      <span class="validation-hint"
-        *ngIf="form.get('name')?.hasError('required') && form.get('name')?.touched">
-        Work Order Name is required
-      </span>
+      @if (form.get('name')?.hasError('required') && form.get('name')?.touched) {
+        <span class="validation-hint">
+          Work Order Name is required
+        </span>
+      }
     </div>
 
     <!-- Status -->
@@ -59,10 +65,10 @@
         [searchable]="false"
         appendTo="body">
         <ng-template ng-label-tmp let-item="item">
-          <span class="status-badge" [ngClass]="'badge-' + item.value">{{ item.label }}</span>
+          <span class="status-badge" [class]="'badge-' + item.value">{{ item.label }}</span>
         </ng-template>
         <ng-template ng-option-tmp let-item="item">
-          <span class="status-badge" [ngClass]="'badge-' + item.value">{{ item.label }}</span>
+          <span class="status-badge" [class]="'badge-' + item.value">{{ item.label }}</span>
         </ng-template>
       </ng-select>
     </div>
@@ -78,24 +84,28 @@
         placeholder="01.01.2026"
         (click)="toggleEndPicker()"
         readonly />
-      <div class="inline-datepicker-wrapper" *ngIf="endPickerOpen">
-        <ngb-datepicker
-          [navigation]="'select'"
-          [showWeekNumbers]="true"
-          [firstDayOfWeek]="1"
-          [startDate]="endDateControl.value!"
-          [formControl]="endDateControl"
-          (dateSelect)="onEndDateSelect($event)">
-        </ngb-datepicker>
-      </div>
-      <span class="validation-hint"
-        *ngIf="form.get('endDate')?.hasError('required') && form.get('endDate')?.touched">
-        End date is required
-      </span>
-      <span class="validation-hint"
-        *ngIf="form.hasError('endBeforeStart') && form.get('endDate')?.touched">
-        End date must be after start date
-      </span>
+      @if (endPickerOpen) {
+        <div class="inline-datepicker-wrapper">
+          <ngb-datepicker
+            [navigation]="'select'"
+            [showWeekNumbers]="true"
+            [firstDayOfWeek]="1"
+            [startDate]="endDateControl.value!"
+            [formControl]="endDateControl"
+            (dateSelect)="onEndDateSelect($event)">
+          </ngb-datepicker>
+        </div>
+      }
+      @if (form.get('endDate')?.hasError('required') && form.get('endDate')?.touched) {
+        <span class="validation-hint">
+          End date is required
+        </span>
+      }
+      @if (form.hasError('endBeforeStart') && form.get('endDate')?.touched) {
+        <span class="validation-hint">
+          End date must be after start date
+        </span>
+      }
     </div>
 
     <!-- Start date -->
@@ -109,21 +119,25 @@
         placeholder="02.01.2026"
         (click)="toggleStartPicker()"
         readonly />
-      <div class="inline-datepicker-wrapper" *ngIf="startPickerOpen">
-        <ngb-datepicker
-          [navigation]="'select'"
-          [showWeekNumbers]="true"
-          [firstDayOfWeek]="1"
-          [startDate]="startDateControl.value!"
-          [formControl]="startDateControl"
-          (dateSelect)="onStartDateSelect($event)">
-        </ngb-datepicker>
-      </div>
-      <span class="validation-hint"
-        *ngIf="form.get('startDate')?.hasError('required') && form.get('startDate')?.touched">
-        Start date is required
-      </span>
+      @if (startPickerOpen) {
+        <div class="inline-datepicker-wrapper">
+          <ngb-datepicker
+            [navigation]="'select'"
+            [showWeekNumbers]="true"
+            [firstDayOfWeek]="1"
+            [startDate]="startDateControl.value!"
+            [formControl]="startDateControl"
+            (dateSelect)="onStartDateSelect($event)">
+          </ngb-datepicker>
+        </div>
+      }
+      @if (form.get('startDate')?.hasError('required') && form.get('startDate')?.touched) {
+        <span class="validation-hint">
+          Start date is required
+        </span>
+      }
     </div>
 
-  </form>
+    </form>
+  }
 </aside>

@@ -1,9 +1,8 @@
 import {
   Component, Input, Output, EventEmitter,
   OnChanges, SimpleChanges, inject, OnInit, Injectable,
-  HostListener
+  ChangeDetectionStrategy
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import {
   ReactiveFormsModule, FormBuilder, FormGroup, FormControl,
   Validators, AbstractControl, ValidationErrors
@@ -53,12 +52,13 @@ function endDateAfterStart(group: AbstractControl): ValidationErrors | null {
 @Component({
   selector: 'app-work-order-panel',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, NgSelectModule, NgbDatepickerModule],
+  imports: [ReactiveFormsModule, NgSelectModule, NgbDatepickerModule],
   templateUrl: './work-order-panel.component.html',
   styleUrls: ['./work-order-panel.component.scss'],
   providers: [
     { provide: NgbDateParserFormatter, useClass: CustomDateParserFormatter },
-  ]
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WorkOrderPanelComponent implements OnChanges, OnInit {
   @Input() isOpen       = false;

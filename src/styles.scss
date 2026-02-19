@@ -1,5 +1,5 @@
 /* Global design tokens and font imports to match the Sketch spec */
-@import url('https://naologic-com-assets.naologic.com/fonts/circular-std/circular-std.css');
+/* Font loaded via <link rel="preload"> in index.html for non-render-blocking perf */
 @import '@ng-select/ng-select/themes/default.theme.css';
 
 :root {

@@ -1,5 +1,4 @@
-import { Component, OnDestroy, inject, signal, computed, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnDestroy, inject, signal, computed, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { TimelineHeaderComponent } from '../timeline-header/timeline-header.component';
 import { TimelineGridComponent, PanelOpenEvent } from '../timeline-grid/timeline-grid.component';
 import { WorkOrderPanelComponent } from '../work-order-panel/work-order-panel.component';
@@ -10,9 +9,10 @@ import { DeviceDetectionService, InactivityService, TimelineZoomService } from '
 @Component({
   selector: 'app-timeline-container',
   standalone: true,
-  imports: [CommonModule, TimelineHeaderComponent, TimelineGridComponent, WorkOrderPanelComponent, DeviceWarningComponent],
+  imports: [TimelineHeaderComponent, TimelineGridComponent, WorkOrderPanelComponent, DeviceWarningComponent],
   templateUrl: './timeline-container.component.html',
-  styleUrls: ['./timeline-container.component.scss']
+  styleUrls: ['./timeline-container.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TimelineContainerComponent implements OnDestroy {
   private readonly inactivity = inject(InactivityService);
