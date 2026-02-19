@@ -34,7 +34,7 @@ export class WorkOrderBarComponent implements OnInit, OnDestroy {
 
   /** Cached tooltip text — recomputed only when order data changes */
   private _cachedTooltip = '';
-  private _tooltipOrderId = '';
+  private _cachedOrderHash = '';
 
   ngOnInit(): void {
     // Register shared document click listener once (first instance only)
@@ -76,18 +76,23 @@ export class WorkOrderBarComponent implements OnInit, OnDestroy {
     return Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1;
   }
 
-  /** Build tooltip text (cached — only recomputed when order changes) */
+  /** Build tooltip text (cached — only recomputed when order data changes) */
   getTooltipText(): string {
-    if (this._tooltipOrderId === this.order?.docId && this._cachedTooltip) {
+    // Create a hash of the order data to detect changes
+    const orderHash = `${this.order.docId}|${this.order.data.name}|${this.order.data.status}|${this.order.data.startDate}|${this.order.data.endDate}`;
+    
+    // Only recompute if order data has changed
+    if (this._cachedOrderHash === orderHash && this._cachedTooltip) {
       return this._cachedTooltip;
     }
+    
     const name = this.order.data.name;
     const status = this.getStatusLabel(this.order.data.status);
     const start = this.formatDate(this.order.data.startDate);
     const end = this.formatDate(this.order.data.endDate);
     const days = this.getDurationDays();
     this._cachedTooltip = `${name}\nStatus: ${status}\n${start} \u2192 ${end} (${days} day${days !== 1 ? 's' : ''})`;
-    this._tooltipOrderId = this.order.docId;
+    this._cachedOrderHash = orderHash;
     return this._cachedTooltip;
   }
 
