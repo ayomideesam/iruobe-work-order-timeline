@@ -49,7 +49,7 @@
 .panel-title {
   margin: 0;
   color: rgba(47, 48, 89, 1);
-  font-family: CircularStd-Medium, 'Circular Std', sans-serif;
+  font-family: var(--type-circular-medium);
   font-size: 20px;
   font-weight: 500;
   line-height: 25px;
@@ -58,7 +58,7 @@
 .panel-subtitle {
   margin: 0;
   color: rgba(104, 113, 150, 1);
-  font-family: CircularStd-Book, 'Circular Std', sans-serif;
+  font-family: var(--type-circular-book);
   font-size: 16px;
   font-weight: 400;
   line-height: 20px;
@@ -81,7 +81,7 @@
   background-color: rgba(255, 255, 255, 1);
   border: none;
   cursor: pointer;
-  font-family: CircularStd-Book, 'Circular Std', sans-serif;
+  font-family: var(--type-circular-book);
   font-size: 14px;
   font-weight: 500;
   color: rgba(47, 48, 89, 1);
@@ -102,7 +102,7 @@
   background-color: rgba(86, 89, 255, 1);
   border: none;
   cursor: pointer;
-  font-family: CircularStd-Book, 'Circular Std', sans-serif;
+  font-family: var(--type-circular-book);
   font-size: 14px;
   font-weight: 500;
   color: rgba(255, 255, 255, 1);
@@ -137,7 +137,7 @@
   }
 
   .error-text {
-    font-family: CircularStd-Book, 'Circular Std', sans-serif;
+    font-family: var(--type-circular-book);
     font-size: 13px;
     font-weight: 400;
     line-height: 18px;
@@ -165,7 +165,7 @@
 /* ── Field labels ── */
 .field-label {
   color: rgba(104, 113, 150, 1);
-  font-family: CircularStd-Regular, 'Circular Std', sans-serif;
+  font-family: var(--type-circular-regular);
   font-size: 14px;
   font-weight: 500;
   line-height: 16px;
@@ -183,7 +183,7 @@
   border: none;
   padding: 0 14px;
   box-sizing: border-box;
-  font-family: CircularStd-Regular, 'Circular Std', sans-serif;
+  font-family: var(--type-circular-regular);
   font-size: 14px;
   font-weight: 500;
   color: rgba(3, 9, 41, 1);
@@ -192,7 +192,7 @@
 
   &::placeholder {
     color: rgba(164, 170, 192, 1);
-    font-family: CircularStd-Regular, 'Circular Std', sans-serif;
+    font-family: var(--type-circular-regular);
     font-size: 14px;
     font-weight: 500;
   }
@@ -208,7 +208,7 @@
 
 /* ── Validation hint text ── */
 .validation-hint {
-  font-family: CircularStd-Book, 'Circular Std', sans-serif;
+  font-family: var(--type-circular-book);
   font-size: 12px;
   font-weight: 400;
   color: rgba(220, 38, 38, 1);
@@ -223,7 +223,7 @@
   height: 22px;
   border-radius: 5px;
   padding: 0 8px;
-  font-family: CircularStd-Book, 'Circular Std', sans-serif;
+  font-family: var(--type-circular-book);
   font-size: 14px;
   font-weight: 400;
   white-space: nowrap;
