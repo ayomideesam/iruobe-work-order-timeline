@@ -135,7 +135,7 @@ export class WorkOrderPanelComponent implements OnChanges, OnInit {
   }
 
   // ── Date formatting for display input ─────────────────────────
-  formatDate(date: NgbDateStruct | null): string {
+  formatDate(date: NgbDateStruct | null | undefined): string {
     if (!date) return '';
     return `${String(date.month).padStart(2, '0')}.${String(date.day).padStart(2, '0')}.${date.year}`;
   }

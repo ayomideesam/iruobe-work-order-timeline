@@ -1,5 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
-
+import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { DeviceWarningComponent } from './features/timeline/components/device-warning/device-warning.component';
 
@@ -29,6 +28,7 @@ import { DeviceWarningComponent } from './features/timeline/components/device-wa
       </div>
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [`
     :host {
       display: flex;

@@ -10,7 +10,7 @@ interface ToastWithTimer extends Toast {
 @Component({
   selector: 'app-toast',
   standalone: true,
-  changeDetection: ChangeDetectionStrategy.Default, // needs Default for array mutations
+  changeDetection: ChangeDetectionStrategy.Eager, // needs Eager for array mutations
   templateUrl: './toast.component.html',
   styleUrls: ['./toast.component.css'],
   animations: [

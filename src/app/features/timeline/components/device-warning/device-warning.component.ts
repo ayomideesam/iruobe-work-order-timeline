@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DeviceDetectionService } from 'src/app/core/services/device-detection.service';
@@ -43,6 +43,7 @@ import { DeviceDetectionService } from 'src/app/core/services/device-detection.s
       </div>
     }
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [`
     .device-warning-container {
       position: sticky;
