@@ -1,12 +1,12 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Router } from '@angular/router';
 import { DeviceWarningComponent } from './features/timeline/components/device-warning/device-warning.component';
 
 @Component({
   selector: 'app-public-landing',
   standalone: true,
-  imports: [CommonModule, DeviceWarningComponent],
+  imports: [DeviceWarningComponent],
   template: `
     <app-device-warning></app-device-warning>
     <div class="landing">
