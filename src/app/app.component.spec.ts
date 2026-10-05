@@ -18,10 +18,11 @@ describe('AppComponent', () => {
     expect(app.title).toEqual('iruobe-work-order-timeline');
   });
 
-  it('should render title', () => {
+  it('should render the router outlet and the toast host', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.content span')?.textContent).toContain('iruobe-work-order-timeline app is running!');
+    expect(compiled.querySelector('router-outlet')).not.toBeNull();
+    expect(compiled.querySelector('app-toast')).not.toBeNull();
   });
 });
