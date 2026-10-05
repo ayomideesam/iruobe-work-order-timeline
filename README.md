@@ -215,7 +215,7 @@ The app is deployed on **Netlify** using the `prod` branch.
 ## Getting Started
 
 ### Prerequisites
-- Node.js 20.19+ or 22.12+ (CI and Netlify use 22, pinned in `.nvmrc`)
+- Node.js 22.12+ or 24+ (ng-select 20 requires it; CI and Netlify use 22, pinned in `.nvmrc`)
 - npm 10.x or higher
 
 ### Installation
