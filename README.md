@@ -1,5 +1,7 @@
 # Work Order Schedule Timeline
 
+[![CI](https://github.com/ayomideesam/iruobe-work-order-timeline/actions/workflows/ci.yml/badge.svg)](https://github.com/ayomideesam/iruobe-work-order-timeline/actions/workflows/ci.yml)
+
 **Frontend Technical Test — by Iruobe Akhigbe Iruobe**
 
 An interactive timeline component for visualizing, creating, and editing work orders across multiple work centers in a manufacturing ERP system, built with Angular 19.
