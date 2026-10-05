@@ -216,7 +216,7 @@ The app is deployed on **Netlify** using the `prod` branch.
 ## Getting Started
 
 ### Prerequisites
-- Node.js 22.22.3+ or 24.15+ (Angular 22 requires it; CI and Netlify use 22, pinned in `.nvmrc`)
+- Node.js 22 (`^22.22.3`), 24 (`^24.15.0`) or `>= 26`, as Angular 22 requires (CI and Netlify use 22, pinned in `.nvmrc`)
 - npm 10.x or higher
 
 ### Installation
