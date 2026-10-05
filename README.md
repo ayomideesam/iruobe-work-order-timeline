@@ -4,13 +4,13 @@
 
 **Frontend Technical Test — by Akhigbe Iruobe**
 
-An interactive timeline component for visualizing, creating, and editing work orders across multiple work centers in a manufacturing ERP system, built with Angular 20.
+An interactive timeline component for visualizing, creating, and editing work orders across multiple work centers in a manufacturing ERP system, built with Angular 22.
 
 ---
 
 ## Overview
 
-This Angular 20 application provides an intuitive interface for manufacturing planners to:
+This Angular 22 application provides an intuitive interface for manufacturing planners to:
 - Visualize **45 work orders** across **9 work centers** at Day, Week, and Month timescales
 - Quickly identify work order status with color-coded bars and badges
 - Create new work orders by clicking any empty timeline cell (date auto-prefilled from click position)
@@ -50,13 +50,14 @@ This Angular 20 application provides an intuitive interface for manufacturing pl
 
 | Technology | Version | Purpose |
 |-----------|---------|---------|
-| Angular | 20.3 | Core framework with standalone components & signals |
-| TypeScript | 5.9 | Strict-mode type safety |
+| Angular | 22.2 | Core framework with standalone components & signals |
+| TypeScript | 6.0 | Strict-mode type safety |
 | SCSS | — | Component & global styles with CSS custom properties |
 | Bootstrap | 5.3.8 | CSS utility foundation |
-| Angular CDK | 20.2 | BreakpointObserver for responsive device detection |
-| ng-select | 20.7 | Status and zoom level dropdowns |
-| ng-bootstrap | 19.0 | Datepicker (ngb-datepicker) and tooltips (ngb-tooltip) |
+| Angular CDK | 22.2 | BreakpointObserver for responsive device detection |
+| ng-select | 24.2 | Status and zoom level dropdowns |
+| ng-bootstrap | 21.0 | Datepicker (ngb-datepicker) and tooltips (ngb-tooltip) |
+| Vitest | 5.0 | Unit tests on jsdom through `ng test` |
 | date-fns | 4.1.0 | Date arithmetic and formatting |
 | RxJS | 7.8.0 | Reactive streams (toast notifications, inactivity) |
 
@@ -215,7 +216,7 @@ The app is deployed on **Netlify** using the `prod` branch.
 ## Getting Started
 
 ### Prerequisites
-- Node.js 22.12+ or 24+ (ng-select 20 requires it; CI and Netlify use 22, pinned in `.nvmrc`)
+- Node.js 22.22.3+ or 24.15+ (Angular 22 requires it; CI and Netlify use 22, pinned in `.nvmrc`)
 - npm 10.x or higher
 
 ### Installation
@@ -395,7 +396,7 @@ All build commands use the modern **esbuild builder** (Angular's `application` b
 ```bash
 npm start          # Dev server on :4200 (esbuild, ~2s rebuild)
 npm run build      # Production build with tree-shaking (esbuild, 3.3s, 545KB / 111KB gzip)
-npm test           # Karma + Jasmine unit tests (146/150 passing = 97.3%)
+npm test           # Vitest unit tests (150/150 passing)
 npm run watch      # Dev build with watch mode (esbuild, live reload)
 npm run lint       # ESLint check
 ```
@@ -415,11 +416,11 @@ Comprehensive unit test suite covering services and key components:
 - **TimelineHeaderComponent** (18 tests) — Zoom selector, Today button, date picker integration
 - **WorkOrderPanelComponent** (58 tests) — Form validation, create/edit modes, date parsing, overlap detection
 
-**Results**: 146 passing / 150 total (97.3% pass rate)
+**Results**: 150 of 150 passing, run by Vitest on jsdom through the Angular CLI's unit-test builder.
 
 Run tests:
 ```bash
-npm test -- --watch=false --browsers=ChromeHeadless
+npm test -- --watch=false
 ```
 
 ---

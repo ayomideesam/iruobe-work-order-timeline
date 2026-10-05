@@ -28,13 +28,12 @@ jobs:
 
       - run: npm ci
 
-      # Production dependencies must stay at 0 findings. The dev toolchain still has advisories
-      # (webpack dev server, karma, @angular/build before 22.2) that only a later major clears.
-      - name: npm audit (production)
-        run: npm audit --omit=dev
+      # The whole tree, dev tooling included, stays at 0 findings.
+      - name: npm audit
+        run: npm audit
 
-      - name: Unit tests (Karma, headless Chrome)
-        run: npx ng test --watch=false --browsers=ChromeHeadless
+      - name: Unit tests (Vitest)
+        run: npx ng test --watch=false
 
       - name: Production build
         run: npm run build
