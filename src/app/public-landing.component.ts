@@ -13,7 +13,7 @@ import { DeviceWarningComponent } from './features/timeline/components/device-wa
       <div class="content">
         <div class="card">
           <h1 class="title">Work Order Schedule Timeline</h1>
-          <p class="subtitle">Frontend Technical Test — by IRUOBE AKHIGBE IRUOBE</p>
+          <p class="subtitle">Frontend Technical Test — by AKHIGBE IRUOBE</p>
           <div class="actions">
             <button
               class="proceed-btn"
