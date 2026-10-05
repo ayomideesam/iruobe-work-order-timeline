@@ -135,14 +135,14 @@ describe('WorkOrderPanelComponent', () => {
     });
 
     it('should create the order on the provided work center', () => {
-      spyOn(workOrderService, 'overlaps').and.returnValue(false);
-      const createSpy = spyOn(workOrderService, 'create');
+      vi.spyOn(workOrderService, 'overlaps').mockReturnValue(false);
+      const createSpy = vi.spyOn(workOrderService, 'create').mockImplementation(() => {});
       component.form.patchValue({ name: 'New Order' });
 
       component.onSubmit();
 
       expect(createSpy).toHaveBeenCalledTimes(1);
-      expect(createSpy.calls.mostRecent().args[0].data.workCenterId).toBe('wc-1');
+      expect(createSpy.mock.lastCall?.[0].data.workCenterId).toBe('wc-1');
     });
 
     it('should pre-fill startDate when provided', () => {
@@ -322,13 +322,13 @@ describe('WorkOrderPanelComponent', () => {
   });
 
   describe('close event', () => {
-    it('should emit close event when close is called', (done) => {
-      component.close.subscribe(() => {
-        expect(true).toBe(true);
-        done();
-      });
-      
+    it('should emit close event when close is called', () => {
+      const closed = vi.fn();
+      component.close.subscribe(closed);
+
       component.onCancel();
+
+      expect(closed).toHaveBeenCalledTimes(1);
     });
   });
 

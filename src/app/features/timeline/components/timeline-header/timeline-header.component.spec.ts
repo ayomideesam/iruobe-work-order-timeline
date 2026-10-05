@@ -74,7 +74,7 @@ describe('TimelineHeaderComponent', () => {
     });
 
     it('should call zoomService.setZoom', () => {
-      spyOn(zoomService, 'setZoom');
+      vi.spyOn(zoomService, 'setZoom').mockImplementation(() => {});
       component.setZoom('week');
       expect(zoomService.setZoom).toHaveBeenCalledWith('week');
     });
@@ -93,7 +93,7 @@ describe('TimelineHeaderComponent', () => {
   describe('onDateSelected', () => {
     it('should set date range when date is selected', () => {
       const ngbDate = { year: 2026, month: 2, day: 15 };
-      spyOn(dateFilterService, 'setDateRange');
+      vi.spyOn(dateFilterService, 'setDateRange').mockImplementation(() => {});
       
       component.onDateSelected(ngbDate);
       
@@ -117,7 +117,7 @@ describe('TimelineHeaderComponent', () => {
     });
 
     it('should reset filter when date is cleared', () => {
-      spyOn(dateFilterService, 'reset');
+      vi.spyOn(dateFilterService, 'reset').mockImplementation(() => {});
       
       component.onDateSelected(null);
       
@@ -155,17 +155,17 @@ describe('TimelineHeaderComponent', () => {
   });
 
   describe('scrollToToday event', () => {
-    it('should emit scrollToToday event when onTodayClick is called', (done) => {
-      component.scrollToToday.subscribe(() => {
-        expect(true).toBe(true);
-        done();
-      });
+    it('should emit scrollToToday event when onTodayClick is called', () => {
+      const emitted = vi.fn();
+      component.scrollToToday.subscribe(emitted);
 
       component.onTodayClick();
+
+      expect(emitted).toHaveBeenCalledTimes(1);
     });
 
     it('should not emit scrollToToday by default', () => {
-      spyOn(component.scrollToToday, 'emit');
+      vi.spyOn(component.scrollToToday, 'emit').mockImplementation(() => {});
       expect(component.scrollToToday.emit).not.toHaveBeenCalled();
     });
   });
