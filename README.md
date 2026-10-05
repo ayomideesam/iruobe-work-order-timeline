@@ -4,13 +4,13 @@
 
 **Frontend Technical Test — by Akhigbe Iruobe**
 
-An interactive timeline component for visualizing, creating, and editing work orders across multiple work centers in a manufacturing ERP system, built with Angular 19.
+An interactive timeline component for visualizing, creating, and editing work orders across multiple work centers in a manufacturing ERP system, built with Angular 20.
 
 ---
 
 ## Overview
 
-This Angular 19 application provides an intuitive interface for manufacturing planners to:
+This Angular 20 application provides an intuitive interface for manufacturing planners to:
 - Visualize **45 work orders** across **9 work centers** at Day, Week, and Month timescales
 - Quickly identify work order status with color-coded bars and badges
 - Create new work orders by clicking any empty timeline cell (date auto-prefilled from click position)
@@ -50,13 +50,13 @@ This Angular 19 application provides an intuitive interface for manufacturing pl
 
 | Technology | Version | Purpose |
 |-----------|---------|---------|
-| Angular | 19.2.18 | Core framework with standalone components & signals |
-| TypeScript | 5.7.2 | Strict-mode type safety |
+| Angular | 20.3 | Core framework with standalone components & signals |
+| TypeScript | 5.9 | Strict-mode type safety |
 | SCSS | — | Component & global styles with CSS custom properties |
 | Bootstrap | 5.3.8 | CSS utility foundation |
-| Angular CDK | 19.2.18 | BreakpointObserver for responsive device detection |
-| ng-select | 14.9.0 | Status and zoom level dropdowns |
-| ng-bootstrap | 18.0.0 | Datepicker (ngb-datepicker) and tooltips (ngb-tooltip) |
+| Angular CDK | 20.2 | BreakpointObserver for responsive device detection |
+| ng-select | 20.7 | Status and zoom level dropdowns |
+| ng-bootstrap | 19.0 | Datepicker (ngb-datepicker) and tooltips (ngb-tooltip) |
 | date-fns | 4.1.0 | Date arithmetic and formatting |
 | RxJS | 7.8.0 | Reactive streams (toast notifications, inactivity) |
 
@@ -215,7 +215,7 @@ The app is deployed on **Netlify** using the `prod` branch.
 ## Getting Started
 
 ### Prerequisites
-- Node.js 20.x or higher
+- Node.js 22.12+ or 24+ (ng-select 20 requires it; CI and Netlify use 22, pinned in `.nvmrc`)
 - npm 10.x or higher
 
 ### Installation
@@ -225,8 +225,6 @@ git clone https://github.com/ayomideesam/iruobe-work-order-timeline.git
 cd iruobe-work-order-timeline
 npm install
 ```
-
-> The `.npmrc` file sets `legacy-peer-deps=true` for ng-select / ng-bootstrap / Angular 19 compatibility.
 
 ### Development Server
 
@@ -357,7 +355,7 @@ interface WorkOrderDocument {
 ## Architecture Notes
 
 ### Component Structure
-- **Standalone components** throughout — no NgModules (pure Angular 19 composition)
+- **Standalone components** throughout — no NgModules (pure standalone composition)
 - **8 timeline components** all using `ChangeDetectionStrategy.OnPush` for optimal performance:
   - `AppComponent` (root)
   - `TimelineContainerComponent` (orchestrator)
@@ -379,7 +377,7 @@ interface WorkOrderDocument {
 - **Template Computation**: Eliminated ~7,672 `isColumnSelected()` calls per change detection cycle by replacing with simple `i === selectedColumnIndex` comparisons
 - **Position Caching**: `getSelectedColumnPosition()` called once per selection change (not per CD cycle), stored in component field
 - **Bar Positioning**: Pre-computed bar positions stored in `Map<string, BarPosition>` for O(1) lookups instead of runtime calculations
-- **Control Flow**: 100% migrated to Angular 19 built-in `@for` / `@if` (no CommonModule structural directives)
+- **Control Flow**: 100% migrated to the built-in `@for` / `@if` blocks (no CommonModule structural directives)
 - **Static Class Bindings**: Replaced `[ngClass]` with `[class]` for cleaner, faster binding updates
 - **Font Preload**: Non-render-blocking preload of Circular Std font
 

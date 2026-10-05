@@ -20,12 +20,18 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      # Same Node as Netlify: both read .nvmrc.
       - uses: actions/setup-node@v7
         with:
-          node-version: 22
+          node-version-file: .nvmrc
           cache: npm
 
       - run: npm ci
+
+      # Production dependencies must stay at 0 findings. The dev toolchain still has advisories
+      # (webpack dev server, karma, @angular/build before 22.2) that only a later major clears.
+      - name: npm audit (production)
+        run: npm audit --omit=dev
 
       - name: Unit tests (Karma, headless Chrome)
         run: npx ng test --watch=false --browsers=ChromeHeadless
