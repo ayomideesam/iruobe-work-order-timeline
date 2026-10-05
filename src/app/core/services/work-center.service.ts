@@ -9,6 +9,6 @@ export class WorkCenterService {
   readonly centers = this._centers;
 
   getAll(): WorkCenterDocument[] {
-    return this._centers();
+    return [...this._centers()];
   }
 }
