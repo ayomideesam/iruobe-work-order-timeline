@@ -202,7 +202,7 @@ The favicon is included in both development and production builds via asset entr
 
 The app is deployed on **Netlify** using the `prod` branch.
 
-- **Live URL**: *(configured via Netlify dashboard)*
+- **Live URL**: (https://naologicerp.netlify.app/)
 - **Branch**: `prod`
 - **Build command**: `npm run build`
 - **Publish directory**: `dist/iruobe-work-order-timeline/browser`
