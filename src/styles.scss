@@ -45,6 +45,13 @@ app-root {
   font-size: 13px;
 }
 
+/* ng-select 24 only focuses a non-searchable select when its selected value is
+   clicked. Both selects here are non-searchable and the value fills most of the
+   control, so clicks fall through to the container, which opens the dropdown. */
+.ng-select:not(.ng-select-searchable) .ng-select-container .ng-value {
+  pointer-events: none;
+}
+
 /* ============================================================
    ngb-datepicker — SINGLE unified global block
    IMPORTANT: All previous ngb-datepicker blocks have been
