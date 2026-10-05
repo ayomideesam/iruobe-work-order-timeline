@@ -134,8 +134,15 @@ describe('WorkOrderPanelComponent', () => {
       });
     });
 
-    it('should pre-fill workCenterId when provided', () => {
-      expect(component.form.get('workCenterId')?.value).toBe('wc-1');
+    it('should create the order on the provided work center', () => {
+      spyOn(workOrderService, 'overlaps').and.returnValue(false);
+      const createSpy = spyOn(workOrderService, 'create');
+      component.form.patchValue({ name: 'New Order' });
+
+      component.onSubmit();
+
+      expect(createSpy).toHaveBeenCalledTimes(1);
+      expect(createSpy.calls.mostRecent().args[0].data.workCenterId).toBe('wc-1');
     });
 
     it('should pre-fill startDate when provided', () => {
