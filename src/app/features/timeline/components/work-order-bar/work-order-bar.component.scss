@@ -46,13 +46,21 @@
   font-weight: 400;
   color: rgba(3, 9, 41, 1);
   height: 18px;
-  display: flex;
-  align-items: center;
+  line-height: 18px;
+  // Block, not flex: text-overflow has no effect on a flex container's text
+  display: block;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   flex: 1;
   min-width: 0;
+
+  // The badge is absolutely positioned, so the name reserves its width plus an 8px gap.
+  // Otherwise a long name runs underneath the badge instead of ending in an ellipsis.
+  .work-order-bar.status-complete & { padding-right: 87px; }    // 79px badge
+  .work-order-bar.status-in-progress & { padding-right: 95px; } // 87px badge
+  .work-order-bar.status-blocked &,
+  .work-order-bar.status-open & { padding-right: 75px; }        // 67px badge
 }
 
 .work-order-badge {
