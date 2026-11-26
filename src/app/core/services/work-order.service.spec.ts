@@ -306,7 +306,7 @@ describe('WorkOrderService', () => {
       // This test verifies the hash mechanism exists
       const hash = localStorage.getItem('naologic_work_orders_hash');
       expect(hash).toBeTruthy();
-      expect(hash).toContain('v4-');
+      expect(hash).toContain('v5-');
     });
 
     it('should handle corrupted localStorage gracefully', () => {
