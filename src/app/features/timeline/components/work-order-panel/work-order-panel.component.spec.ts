@@ -332,6 +332,53 @@ describe('WorkOrderPanelComponent', () => {
     });
   });
 
+  describe('Escape key', () => {
+    const pressEscape = () =>
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+
+    let closed: ReturnType<typeof vi.fn>;
+
+    beforeEach(() => {
+      closed = vi.fn();
+      component.close.subscribe(closed);
+      component.isOpen = true;
+    });
+
+    it('closes the open panel', () => {
+      pressEscape();
+      expect(closed).toHaveBeenCalledTimes(1);
+    });
+
+    it('does nothing while the panel is closed', () => {
+      component.isOpen = false;
+      pressEscape();
+      expect(closed).not.toHaveBeenCalled();
+    });
+
+    it('closes an open date picker first, then the panel on the next press', () => {
+      component.startPickerOpen = true;
+
+      pressEscape();
+      expect(component.startPickerOpen).toBe(false);
+      expect(closed).not.toHaveBeenCalled();
+
+      pressEscape();
+      expect(closed).toHaveBeenCalledTimes(1);
+    });
+
+    it('leaves the panel open while the status dropdown is open', () => {
+      // ng-select appends its dropdown to <body> and closes it on Escape by itself
+      const dropdown = document.createElement('ng-dropdown-panel');
+      document.body.appendChild(dropdown);
+      try {
+        pressEscape();
+        expect(closed).not.toHaveBeenCalled();
+      } finally {
+        dropdown.remove();
+      }
+    });
+  });
+
   describe('picker toggle', () => {
     it('should toggle startPickerOpen', () => {
       expect(component.startPickerOpen).toBe(false);
