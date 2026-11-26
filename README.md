@@ -36,7 +36,7 @@ This Angular 22 application provides an intuitive interface for manufacturing pl
 ### Bonus Features (Implemented ✅)
 - ✅ **localStorage Persistence** — All work orders survive page refresh; changes persist between sessions
 - ✅ **Smooth Animations** — Panel slides in/out, status badges and bars have CSS transitions
-- ✅ **Keyboard Navigation** — Arrow keys navigate between work order bars; Enter opens the edit panel; Escape closes any open panel or dropdown
+- ✅ **Keyboard Navigation** — ↑/↓ move between work order bars, ←/→ between date columns; Enter opens the focused order; T jumps to today; Escape closes an open date picker, then the panel
 - ✅ **Today Button** — Scrolls the timeline horizontally to center on today's date
 - ✅ **Tooltips on Hover** — Full work order name, start/end dates, and status shown via ngb-tooltip on bar hover
 - ✅ **Toast Notifications** — Auto-dismissing success/error toast system for create, update, and delete actions
@@ -184,7 +184,7 @@ Production build output: dist/iruobe-work-order-timeline/browser/
 └── Build time:         3.3 seconds
 ```
 
-**No performance regressions**. All 146/150 tests still passing (97.3%) after optimizations.
+**No performance regressions**. The full test suite passes after the optimizations.
 
 ---
 
@@ -247,7 +247,11 @@ Output: `dist/iruobe-work-order-timeline/`
 
 ## Sample Data
 
-The application ships with **45 work orders** spread across **9 work centers** spanning Jan 2024 – Dec 2026. All orders are non-overlapping within their work center.
+The application ships with **46 work orders** spread across **9 work centers**. All orders are non-overlapping within their work center, every order ends on or after its start, and `demo-dates.spec.ts` fails the build if either rule breaks.
+
+The dates in `demo-100-workorders.json` are written around 5 April 2026. When the demo loads, `shiftDemoOrders` (in `core/data/demo-dates.ts`) moves every order by the same whole number of weeks so that date lands in the current week. The schedule around the Today line is always populated, and each order keeps its length and its weekday. Once you change an order, the saved data is kept exactly as saved.
+
+The timeline's range follows today and the data (`core/utils/calendar-range.ts`): at least 12 months either side of today, widened to the first and last months that hold an order.
 
 ### Work Centers
 
@@ -326,10 +330,11 @@ interface WorkOrderDocument {
 ### Keyboard Navigation
 | Key | Action |
 |-----|--------|
-| `←` / `→` | Navigate between work order bars |
-| `↑` / `↓` | Move between work centers |
-| `Enter` | Open edit panel for focused bar |
-| `Escape` | Close panel or dropdown |
+| `↑` / `↓` | Move focus between work order bars |
+| `←` / `→` | Move between date columns |
+| `Enter` | Open the edit panel for the focused bar |
+| `T` | Jump to today |
+| `Escape` | Close an open date picker, then the panel; clear the keyboard selection |
 
 ---
 
@@ -396,7 +401,7 @@ All build commands use the modern **esbuild builder** (Angular's `application` b
 ```bash
 npm start          # Dev server on :4200 (esbuild, ~2s rebuild)
 npm run build      # Production build with tree-shaking (esbuild, 3.3s, 545KB / 111KB gzip)
-npm test           # Vitest unit tests (150/150 passing)
+npm test           # Vitest unit tests (172/172 passing)
 npm run watch      # Dev build with watch mode (esbuild, live reload)
 npm run lint       # ESLint check
 ```
@@ -409,14 +414,17 @@ npm run lint       # ESLint check
 
 Comprehensive unit test suite covering services and key components:
 
-- **WorkOrderService** (25 tests) — CRUD operations, overlap detection, localStorage persistence
-- **WorkCenterService** (7 tests) — Data retrieval, signal reactivity
-- **TimelineZoomService** (20 tests) — Zoom level management, column generation for all timescales
-- **DateFilterService** (18 tests) — Date range filtering logic
-- **TimelineHeaderComponent** (18 tests) — Zoom selector, Today button, date picker integration
-- **WorkOrderPanelComponent** (58 tests) — Form validation, create/edit modes, date parsing, overlap detection
+- **WorkOrderPanelComponent** (43 tests) — Form validation, create/edit modes, date parsing, overlap detection, Escape handling
+- **WorkOrderService** (27 tests) — CRUD operations, overlap detection, localStorage persistence
+- **DateFilterService** (26 tests) — Date range filtering logic
+- **TimelineHeaderComponent** (23 tests) — Zoom selector, Today button, date picker integration
+- **TimelineZoomService** (22 tests) — Zoom level management, column generation for all timescales
+- **Demo data and `shiftDemoOrders`** (12 tests) — The brief's sample-data rules, no overlaps, no order ending before it starts, whole-week date shifting
+- **WorkCenterService** (10 tests) — Data retrieval, signal reactivity
+- **`calendarRange`** (6 tests) — Range around today, widening to the data, month boundaries, leap years
+- **AppComponent** (3 tests) — App shell smoke test
 
-**Results**: 150 of 150 passing, run by Vitest on jsdom through the Angular CLI's unit-test builder.
+**Results**: 172 of 172 passing, run by Vitest on jsdom through the Angular CLI's unit-test builder.
 
 Run tests:
 ```bash
@@ -429,7 +437,7 @@ npm test -- --watch=false
 
 - ✅ Working Angular 19+ application (standalone components, signals, TypeScript 5.7.2 strict)
 - ✅ All core features implemented (Timeline grid, zoom levels, bars, create/edit panel, overlap detection)
-- ✅ 9 work centers and 45 work orders in sample data (Jan 2024 – Dec 2026)
+- ✅ 9 work centers and 46 work orders in sample data, anchored to today when the app loads
 - ✅ All 4 status types demonstrated (Open, In Progress, Complete, Blocked)
 - ✅ localStorage persistence (auto-save on CRUD, survives page refresh)
 - ✅ Smooth animations and transitions (CSS + Angular animations)
@@ -443,7 +451,7 @@ npm test -- --watch=false
 - ✅ Clean git history (conventional commits, 3 synced branches: iruobe-development, prod, main)
 - ✅ README documentation (comprehensive, covering architecture, optimizations, favicon, build)
 - ✅ 0 npm vulnerabilities (npm audit clean)
-- ✅ 146/150 unit tests passing (97.3%, no regressions from optimizations)
+- ✅ 172/172 unit tests passing
 - ✅ Performance optimized to A- grade (85/100) via 16 specific optimizations
 - ✅ esbuild migration (3.3s builds, 545KB / 111KB gzip, 10× faster than Webpack)
 - ✅ Custom favicon (naologicfav.png, 32×32, with correct MIME type)
