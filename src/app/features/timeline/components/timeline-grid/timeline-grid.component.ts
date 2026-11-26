@@ -4,6 +4,7 @@ import { ToastService } from 'src/app/core/services/toast.service';
 import { WorkOrderBarComponent } from '../work-order-bar/work-order-bar.component';
 import { CurrentDayIndicatorComponent } from '../current-day-indicator/current-day-indicator.component';
 import { WorkOrderDocument } from 'src/app/core/models';
+import { calendarRange } from 'src/app/core/utils/calendar-range';
 
 interface DateColumn {
   date: Date;
@@ -41,9 +42,6 @@ export class TimelineGridComponent implements AfterViewInit {
   centers = this.centerService.centers;
   zoomLevel = this.zoomService.zoomLevel;
 
-  // Fixed calendar range: January 2024 - December 2026
-  readonly CALENDAR_START = new Date(2024, 0, 1);  // Jan 1, 2024
-  readonly CALENDAR_END = new Date(2026, 11, 31);  // Dec 31, 2026
   private hasScrolledToToday = false;
 
   @ViewChild('rightPanel') rightPanelEl!: ElementRef<HTMLElement>;
@@ -331,9 +329,10 @@ export class TimelineGridComponent implements AfterViewInit {
   }
 
   private _recalculateGrid(): void {
-    // Use fixed calendar range: January 2024 - December 2026
-    const startMonth = new Date(this.CALENDAR_START);
-    const endMonth = new Date(this.CALENDAR_END);
+    // The range follows today and the orders (see calendarRange): the Today line is
+    // always on the grid, and no order is cut off. The effect that calls this reads
+    // orders(), so the range widens as soon as an order is saved outside it.
+    const { start: startMonth, end: endMonth } = calendarRange(this.orders());
 
     this.dateColumns = this._generateColumns(startMonth, endMonth);
     this.totalGridWidth = this.dateColumns.reduce((sum, col) => sum + col.width, 0);

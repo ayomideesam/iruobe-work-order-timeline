@@ -1,7 +1,7 @@
 import {
   Component, Input, Output, EventEmitter,
   OnChanges, SimpleChanges, inject, OnInit, Injectable,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy, DOCUMENT
 } from '@angular/core';
 import {
   ReactiveFormsModule, FormBuilder, FormGroup, FormControl,
@@ -58,6 +58,9 @@ function endDateAfterStart(group: AbstractControl): ValidationErrors | null {
   providers: [
     { provide: NgbDateParserFormatter, useClass: CustomDateParserFormatter },
   ],
+  host: {
+    '(document:keydown.escape)': 'onEscape()',
+  },
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WorkOrderPanelComponent implements OnChanges, OnInit {
@@ -71,6 +74,7 @@ export class WorkOrderPanelComponent implements OnChanges, OnInit {
   private fb        = inject(FormBuilder);
   private woService = inject(WorkOrderService);
   private toastService = inject(ToastService);
+  private document  = inject(DOCUMENT);
 
   form!: FormGroup;
   errorMessage = '';
@@ -185,6 +189,22 @@ export class WorkOrderPanelComponent implements OnChanges, OnInit {
     this.startPickerOpen = false;
     this.endPickerOpen   = false;
     this.close.emit();
+  }
+
+  /**
+   * Escape closes the innermost thing that is open: an open date picker first,
+   * then the panel. The status dropdown (appended to <body>) closes itself on
+   * Escape, so while it is open the panel stays put.
+   */
+  onEscape(): void {
+    if (!this.isOpen) return;
+    if (this.document.querySelector('ng-dropdown-panel')) return;
+    if (this.startPickerOpen || this.endPickerOpen) {
+      this.startPickerOpen = false;
+      this.endPickerOpen   = false;
+      return;
+    }
+    this.onCancel();
   }
 
   onSubmit(): void {

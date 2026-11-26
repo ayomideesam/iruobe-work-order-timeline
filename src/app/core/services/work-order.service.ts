@@ -1,6 +1,7 @@
 import { Injectable, signal, WritableSignal } from '@angular/core';
 import { WorkOrderDocument } from '../models';
 import DEMO_WORK_ORDERS from '../data/demo-100-workorders.json';
+import { shiftDemoOrders } from '../data/demo-dates';
 
 const STORAGE_KEY = 'naologic_work_orders';
 const STORAGE_HASH_KEY = 'naologic_work_orders_hash';
@@ -9,7 +10,9 @@ const STORAGE_HASH_KEY = 'naologic_work_orders_hash';
  * Generate a simple hash from demo data to auto-detect changes.
  * Whenever demo-100-workorders.json is modified, this hash changes
  * and cached localStorage data is automatically invalidated.
- * Uses lightweight fields only — no JSON.stringify of full dataset.
+ * Uses lightweight fields only — no JSON.stringify of full dataset,
+ * so a fix to an order in the middle of the file needs the version
+ * prefix bumped by hand. v5: demo dates anchored to today, wo-042 fixed.
  */
 function computeDemoDataHash(): string {
   const demoData = DEMO_WORK_ORDERS as WorkOrderDocument[];
@@ -19,7 +22,7 @@ function computeDemoDataHash(): string {
   // Use first + last order dates as part of the fingerprint (avoids stringifying full array)
   const firstDate = demoData[0]?.data?.startDate || '';
   const lastDate = demoData[count - 1]?.data?.endDate || '';
-  return `v4-${count}-${firstId}-${lastId}-${firstDate}-${lastDate}`;
+  return `v5-${count}-${firstId}-${lastId}-${firstDate}-${lastDate}`;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -61,7 +64,12 @@ export class WorkOrderService {
     });
   }
 
-  /** Load from localStorage, fall back to demo data if nothing stored */
+  /**
+   * Load from localStorage, fall back to demo data if nothing stored.
+   * Saved orders come back exactly as saved. Demo orders are re-anchored to
+   * today on every load (shiftDemoOrders), until the user's first change
+   * saves them.
+   */
   private _loadFromStorage(): WorkOrderDocument[] {
     const currentHash = computeDemoDataHash();
     try {
@@ -70,7 +78,7 @@ export class WorkOrderService {
       if (storedHash !== currentHash) {
         localStorage.removeItem(STORAGE_KEY);
         localStorage.setItem(STORAGE_HASH_KEY, currentHash);
-        return [...(DEMO_WORK_ORDERS as WorkOrderDocument[])];
+        return shiftDemoOrders(DEMO_WORK_ORDERS as WorkOrderDocument[]);
       }
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
@@ -80,7 +88,7 @@ export class WorkOrderService {
       // Corrupted data — fall back to demo
     }
     localStorage.setItem(STORAGE_HASH_KEY, currentHash);
-    return [...(DEMO_WORK_ORDERS as WorkOrderDocument[])];
+    return shiftDemoOrders(DEMO_WORK_ORDERS as WorkOrderDocument[]);
   }
 
   /** Persist current state to localStorage */
